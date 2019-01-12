@@ -1,6 +1,5 @@
 package com.example.alberto.facecook;
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -8,16 +7,16 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class ChoiceActivity extends AppCompatActivity implements View.OnClickListener {
 
     /* Elementos */
     Toolbar toolbar;
-    Button btnEntrar;
+    Button btnVerCocineros, btnVerRecetas;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_choice);
 
         this.iniciarElementos();
         this.iniciarToolbar();
@@ -28,11 +27,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      */
     private void iniciarElementos(){
         /* XML */
-        this.toolbar = (Toolbar)findViewById(R.id.toolbarMain);
-        this.btnEntrar = (Button)findViewById(R.id.btnEntrar);
+        this.toolbar = (Toolbar)findViewById(R.id.toolbarChoice);
+        this.btnVerCocineros = (Button)findViewById(R.id.btnVerCocineros);
+        this.btnVerRecetas = (Button)findViewById(R.id.btnVerRecetas);
 
         /* Clicklable */
-        this.btnEntrar.setOnClickListener(this);
+        this.btnVerCocineros.setOnClickListener(this);
+        this.btnVerRecetas.setOnClickListener(this);
     }
 
     /**
@@ -46,7 +47,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-        Intent intent = new Intent(getApplicationContext(), ChoiceActivity.class);
-        startActivity(intent);
+        switch (v.getId()){
+            case R.id.btnVerRecetas:{
+                //TODO ACTIVIDAD PARA VER LAS RECETAS
+                break;
+            }
+            case R.id.btnVerCocineros:{
+                //TODO ACTIVIDAD PARA VER LOS COCINEROS CERCA
+                break;
+            }
+        }
     }
 }
