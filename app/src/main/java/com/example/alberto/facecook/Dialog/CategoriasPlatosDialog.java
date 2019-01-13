@@ -50,6 +50,14 @@ public class CategoriasPlatosDialog extends DialogFragment {
                 respuesta.onRespuestaDialogCategoriasPlatos(arrayCategorias[numPulsado]);
             }
         });
+        builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener(){
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                /* No hace nada, solo permite al usuario poder cerrar el dialog sin
+                 * necesidad de seleccionar nada */
+
+            }
+        });
 
         return builder.create();
     }
