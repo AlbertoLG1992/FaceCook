@@ -1,4 +1,4 @@
-package com.example.alberto.facecook;
+package com.example.alberto.facecook.Activities;
 
 import android.graphics.Color;
 import android.support.design.widget.FloatingActionButton;
@@ -8,8 +8,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
-public class RecetasActivity extends AppCompatActivity {
+import com.example.alberto.facecook.Dialog.CategoriasPlatosDialog;
+import com.example.alberto.facecook.R;
+
+public class RecetasActivity extends AppCompatActivity implements CategoriasPlatosDialog.respuestaDialogCategoriasPlatos {
 
     /* Elementos */
     Toolbar toolbar;
@@ -22,6 +26,7 @@ public class RecetasActivity extends AppCompatActivity {
 
         this.iniciarElementos();
         this.iniciarToolbar();
+        //TODO QUE SE CARGUEN LOS PLATOS
 
         /* Listenner de FloatingActionButton */
         this.floatingActionButton.setOnClickListener(new View.OnClickListener() {
@@ -71,8 +76,15 @@ public class RecetasActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
 
-        //TODO FILTRAR POR CATEGORIAS
+        CategoriasPlatosDialog dialog = new CategoriasPlatosDialog();
+        dialog.show(getSupportFragmentManager(), "DialogoCategoriasPlatos");
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onRespuestaDialogCategoriasPlatos(String categoria) {
+        Toast.makeText(this, categoria, Toast.LENGTH_LONG).show();
+        //TODO QUE SE FILTREN LOS PLATOS
     }
 }
