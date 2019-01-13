@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">FaceCook</string>
+    <string name="activity_recetas_name">Mis Recetas</string>
 </resources>

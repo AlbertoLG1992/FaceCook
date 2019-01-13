@@ -1,5 +1,6 @@
 package com.example.alberto.facecook;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -49,7 +50,9 @@ public class ChoiceActivity extends AppCompatActivity implements View.OnClickLis
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.btnVerRecetas:{
-                //TODO ACTIVIDAD PARA VER LAS RECETAS
+                /* Abre la actividad de RecetasActivity */
+                Intent intent = new Intent(getApplicationContext(), RecetasActivity.class);
+                startActivity(intent);
                 break;
             }
             case R.id.btnVerCocineros:{
