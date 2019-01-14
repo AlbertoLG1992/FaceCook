@@ -119,8 +119,8 @@ public class RecetasActivity extends AppCompatActivity implements CategoriasPlat
      */
     @Override
     public void onRespuestaDialogCategoriasPlatos(String categoria) {
-        /* Si devuelve nada es porque el usuario no quiere que se filtre */
-        if (categoria.equals("Nada")){
+        /* Si devuelve NoFiltrar es porque el usuario no quiere que se filtre */
+        if (categoria.equals("NoFiltrar")){
             this.cargarAdaptador();
         }else {
             this.cargarAdaptadorFiltrado(categoria);

@@ -27,13 +27,11 @@ public class CategoriasPlatosDialog extends DialogFragment {
          * en un array de String para poder introducirlo en el Dialog */
         TablaCategoriaPlato tablaCategoriaPlato = new TablaCategoriaPlato(getContext());
         ArrayList<CategoriaPlato> list = tablaCategoriaPlato.verTodasCategorias();
-        /* El array se crea con 1 más de tamaño para poder introducir la categoria de nada,
-         * en caso de no querer filtrar por nada */
-        this.arrayCategorias = new String[tablaCategoriaPlato.totalCategorias() + 1];
+        /* Se crea el array y se rellena con todas las categorias */
+        this.arrayCategorias = new String[tablaCategoriaPlato.totalCategorias()];
         for (int i = 0; i < tablaCategoriaPlato.totalCategorias(); i++){
             this.arrayCategorias[i] = list.get(i).getNombre();
         }
-        this.arrayCategorias[tablaCategoriaPlato.totalCategorias()] = "Nada";
 
         /* Se introducen todos los datos que se mostraran en el Dialog y se crean los
          * métodos para recibir la respuesta pulsada */
@@ -41,21 +39,22 @@ public class CategoriasPlatosDialog extends DialogFragment {
         builder.setSingleChoiceItems(this.arrayCategorias, 0, new DialogInterface.OnClickListener(){
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                /* Se actualiza el número pulsado */
                 numPulsado = which;
             }
         });
-        builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("Filtrar", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                /* En caso de pulsar positivo devuelve la categoria seleccionada */
                 respuesta.onRespuestaDialogCategoriasPlatos(arrayCategorias[numPulsado]);
             }
         });
-        builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener(){
+        builder.setNegativeButton("No filtrar", new DialogInterface.OnClickListener(){
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                /* No hace nada, solo permite al usuario poder cerrar el dialog sin
-                 * necesidad de seleccionar nada */
-
+                /* En caso de pulsar NoFiltrar, envia ese mensaje para desacer el filtrado */
+                respuesta.onRespuestaDialogCategoriasPlatos("NoFiltrar");
             }
         });
 
