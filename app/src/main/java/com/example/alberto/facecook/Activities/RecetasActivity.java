@@ -8,16 +8,24 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.alberto.facecook.Adaptadores.AdapterRecetas;
+import com.example.alberto.facecook.BaseDeDatos.Platos.Plato;
 import com.example.alberto.facecook.Dialog.CategoriasPlatosDialog;
 import com.example.alberto.facecook.R;
 
-public class RecetasActivity extends AppCompatActivity implements CategoriasPlatosDialog.respuestaDialogCategoriasPlatos {
+public class RecetasActivity extends AppCompatActivity implements CategoriasPlatosDialog.respuestaDialogCategoriasPlatos,
+    AdapterView.OnItemClickListener{
 
     /* Elementos */
     Toolbar toolbar;
     FloatingActionButton floatingActionButton;
+    ListView listView;
+
+    AdapterRecetas adapterRecetas;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +34,7 @@ public class RecetasActivity extends AppCompatActivity implements CategoriasPlat
 
         this.iniciarElementos();
         this.iniciarToolbar();
-        //TODO QUE SE CARGUEN LOS PLATOS
+        this.cargarAdaptador();
 
         /* Listenner de FloatingActionButton */
         this.floatingActionButton.setOnClickListener(new View.OnClickListener() {
@@ -44,6 +52,10 @@ public class RecetasActivity extends AppCompatActivity implements CategoriasPlat
         /* XML */
         this.toolbar = (Toolbar)findViewById(R.id.toolbarRecetas);
         this.floatingActionButton = (FloatingActionButton)findViewById(R.id.floatBtnRecetas);
+        this.listView = (ListView)findViewById(R.id.listViewRecetas);
+
+        /* Clickables */
+        this.listView.setOnItemClickListener(this);
     }
 
     /**
@@ -68,6 +80,24 @@ public class RecetasActivity extends AppCompatActivity implements CategoriasPlat
     }
 
     /**
+     * Método para cargar el adaptador de forma normal
+     */
+    private void cargarAdaptador(){
+        this.adapterRecetas = new AdapterRecetas(this, getApplicationContext());
+        this.listView.setAdapter(this.adapterRecetas);
+    }
+
+    /**
+     * Método para cargar el adaptador filtrando por categoría
+     *
+     * @param categoria :String
+     */
+    private void cargarAdaptadorFiltrado(String categoria){
+        this.adapterRecetas = new AdapterRecetas(this, getApplicationContext(), categoria);
+        this.listView.setAdapter(this.adapterRecetas);
+    }
+
+    /**
      * Método que se activa al pulsar sobre un item del menú
      *
      * @param item :MenuItem
@@ -82,9 +112,28 @@ public class RecetasActivity extends AppCompatActivity implements CategoriasPlat
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Método que se activa al volver del dialog CategoriasPlatos
+     *
+     * @param categoria :String
+     */
     @Override
     public void onRespuestaDialogCategoriasPlatos(String categoria) {
-        Toast.makeText(this, categoria, Toast.LENGTH_LONG).show();
-        //TODO QUE SE FILTREN LOS PLATOS
+        /* Si devuelve nada es porque el usuario no quiere que se filtre */
+        if (categoria.equals("Nada")){
+            this.cargarAdaptador();
+        }else {
+            this.cargarAdaptadorFiltrado(categoria);
+        }
+    }
+
+    /**
+     * Metodo que se ejecuta al pulsar normal sobre el listView
+     */
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id){
+        Plato plato = (Plato)this.adapterRecetas.getItem(position);
+        Toast.makeText(this, plato.getUrlPdf(), Toast.LENGTH_LONG).show();
+        //TODO ABRIR EL PDF
     }
 }

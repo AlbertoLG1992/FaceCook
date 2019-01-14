@@ -22,6 +22,18 @@ public class CategoriaPlato {
         this.foto = foto;
     }
 
+    /**
+     * Constructor de clase sin el id
+     *
+     * @param nombre :String
+     * @param foto :Bitmap
+     */
+    public CategoriaPlato(String nombre, Bitmap foto) {
+        this.id = id;
+        this.nombre = nombre;
+        this.foto = foto;
+    }
+
     public int getId() {
         return id;
     }
