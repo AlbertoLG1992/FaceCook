@@ -79,6 +79,35 @@ public class TablaCategoriaPlato {
     }
 
     /**
+     * Extrae todos los nombres de las categorias de la base de datos
+     *
+     * @return :String
+     */
+    public String[] verTodasCategoriasNombre(){
+        int posicion = 0; //Será el que recorra el array
+        String listaCategorias[] = new String[this.totalCategorias()];
+        Cursor cursor;
+
+        /* Se abre la base de datos y se extraen los datos haciendo la consulta */
+        this.openDatabaseRead();
+        cursor = this.database.rawQuery("SELECT * FROM categoria_plato;", null);
+
+        /* Se recorre el cursor y se rellena el array con el nombre de las categorias */
+        if (cursor.moveToFirst()){
+            do {
+                listaCategorias[posicion] = cursor.getString(1);
+                posicion++;
+            }while (cursor.moveToNext());
+        }
+
+        /* Se cierran las conexiones */
+        cursor.close();
+        this.closeDatabase();
+
+        return listaCategorias;
+    }
+
+    /**
      * Devuelve el total de todas las categorias existentes
      *
      * @return :int

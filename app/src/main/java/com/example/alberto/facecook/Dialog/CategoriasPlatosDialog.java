@@ -23,15 +23,10 @@ public class CategoriasPlatosDialog extends DialogFragment {
         /* Se crea el builder */
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-        /* Es necesario extraer de la base de datos todas las categorias e introducirlas
-         * en un array de String para poder introducirlo en el Dialog */
+        /* Se realiza una consulta para extraer un array de String con todos los nombres
+         * de las categorias */
         TablaCategoriaPlato tablaCategoriaPlato = new TablaCategoriaPlato(getContext());
-        ArrayList<CategoriaPlato> list = tablaCategoriaPlato.verTodasCategorias();
-        /* Se crea el array y se rellena con todas las categorias */
-        this.arrayCategorias = new String[tablaCategoriaPlato.totalCategorias()];
-        for (int i = 0; i < tablaCategoriaPlato.totalCategorias(); i++){
-            this.arrayCategorias[i] = list.get(i).getNombre();
-        }
+        this.arrayCategorias = tablaCategoriaPlato.verTodasCategoriasNombre();
 
         /* Se introducen todos los datos que se mostraran en el Dialog y se crean los
          * métodos para recibir la respuesta pulsada */
