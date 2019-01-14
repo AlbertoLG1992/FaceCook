@@ -17,7 +17,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".Activities.ChoiceActivity" />
-        <activity android:name=".Activities.RecetasActivity"></activity>
+        <activity android:name=".Activities.RecetasActivity" />
+        <activity android:name=".Activities.VisorPdfActivity"></activity>
     </application>
 
 </manifest>

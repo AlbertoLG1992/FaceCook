@@ -1,5 +1,6 @@
 package com.example.alberto.facecook.Activities;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -25,6 +26,7 @@ public class RecetasActivity extends AppCompatActivity implements CategoriasPlat
     FloatingActionButton floatingActionButton;
     ListView listView;
 
+    /* Atributos */
     AdapterRecetas adapterRecetas;
 
     @Override
@@ -132,8 +134,13 @@ public class RecetasActivity extends AppCompatActivity implements CategoriasPlat
      */
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id){
+        /* Se extrae el plato del adaptador */
         Plato plato = (Plato)this.adapterRecetas.getItem(position);
-        Toast.makeText(this, plato.getUrlPdf(), Toast.LENGTH_LONG).show();
-        //TODO ABRIR EL PDF
+        /* Se envia el título y la url del pdf en el intent a la nueva actividad
+         * antes de iniciarla */
+        Intent intent = new Intent(getApplicationContext(), VisorPdfActivity.class);
+        intent.putExtra("titulo", plato.getNombre());
+        intent.putExtra("url", plato.getUrlPdf());
+        startActivity(intent);
     }
 }
