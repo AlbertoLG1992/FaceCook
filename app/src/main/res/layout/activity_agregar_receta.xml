@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activities.AgregarRecetaActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbarAgregarRecetas"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        android:paddingRight="20dp"
+        android:theme="?attr/actionBarTheme"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbarAgregarRecetas">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:orientation="vertical"
+            tools:layout_editor_absoluteY="56dp">
+
+            <EditText
+                android:id="@+id/edtTituloReceta"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:ems="10"
+                android:hint="Título de la Receta"
+                android:inputType="textPersonName"
+                android:textSize="24sp" />
+
+            <Spinner
+                android:id="@+id/spinnerReceta"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textView3"
+                    android:layout_width="202dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginBottom="10dp"
+                    android:text="Ingredientes"
+                    android:textSize="18sp" />
+
+                <ImageButton
+                    android:id="@+id/imgBtnAdd"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:backgroundTint="@color/colorAccentSuave"
+                    app:srcCompat="@drawable/ic_add_circle_white" />
+
+                <ImageButton
+                    android:id="@+id/imgBtnDelete"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:backgroundTint="@color/colorAccentSuave"
+                    app:srcCompat="@drawable/ic_remove_circle_white" />
+            </LinearLayout>
+
+            <ListView
+                android:id="@+id/listViewAddIngredientes"
+                android:layout_width="match_parent"
+                android:layout_height="211dp"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/border" />
+
+            <EditText
+                android:id="@+id/edtDescripReceta"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="10dp"
+                android:ems="10"
+                android:gravity="bottom"
+                android:hint="Descripción"
+                android:inputType="textMultiLine|textPersonName"
+                android:textSize="24sp" />
+
+        </LinearLayout>
+    </ScrollView>
+
+</android.support.constraint.ConstraintLayout>

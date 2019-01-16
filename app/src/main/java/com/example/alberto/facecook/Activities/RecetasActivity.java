@@ -29,6 +29,9 @@ public class RecetasActivity extends AppCompatActivity implements CategoriasPlat
     /* Atributos */
     AdapterRecetas adapterRecetas;
 
+    /* Variables para las ActivitiesForResult */
+    static final int REQUEST_RECETA_NUEVA = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,7 +45,8 @@ public class RecetasActivity extends AppCompatActivity implements CategoriasPlat
         this.floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO AGREGAR NUEVA RECETA
+                Intent intent = new Intent(getApplicationContext(), AgregarRecetaActivity.class);
+                startActivityForResult(intent, REQUEST_RECETA_NUEVA);
             }
         });
     }
@@ -142,5 +146,19 @@ public class RecetasActivity extends AppCompatActivity implements CategoriasPlat
         intent.putExtra("titulo", plato.getNombre());
         intent.putExtra("url", plato.getUrlPdf());
         startActivity(intent);
+    }
+
+    /**
+     * Método iniciado al volver de una actividad iniciada con ActivityForResult
+     *
+     * @param requestCode :int
+     * @param resultCode :int
+     * @param data :Intent
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        if ((requestCode == REQUEST_RECETA_NUEVA) && resultCode == RESULT_OK){
+            this.cargarAdaptador();
+        }
     }
 }

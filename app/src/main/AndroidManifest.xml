@@ -18,7 +18,10 @@
         </activity>
         <activity android:name=".Activities.ChoiceActivity" />
         <activity android:name=".Activities.RecetasActivity" />
-        <activity android:name=".Activities.VisorPdfActivity"></activity>
+        <activity android:name=".Activities.VisorPdfActivity" />
+        <activity
+            android:name=".Activities.AgregarRecetaActivity"
+            android:windowSoftInputMode="stateHidden"/>
     </application>
 
 </manifest>
