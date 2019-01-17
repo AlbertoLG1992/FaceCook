@@ -16,9 +16,13 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.example.alberto.facecook.BaseDeDatos.CategoriaPlatos.CategoriaPlato;
 import com.example.alberto.facecook.BaseDeDatos.CategoriaPlatos.TablaCategoriaPlato;
+import com.example.alberto.facecook.BaseDeDatos.Platos.Plato;
+import com.example.alberto.facecook.BaseDeDatos.Platos.TablaPlato;
 import com.example.alberto.facecook.Dialog.AddIngredienteDialog;
 import com.example.alberto.facecook.Dialog.EliminarIngredienteDialog;
+import com.example.alberto.facecook.PDF.GenerarPdfReceta;
 import com.example.alberto.facecook.R;
 
 import java.util.ArrayList;
@@ -100,18 +104,46 @@ public class AgregarRecetaActivity extends AppCompatActivity implements View.OnC
         switch (item.getItemId()){
             case R.id.itemGuardar:{
                 if (comprobarDatosRellenos()){
-                    //TODO GUARDAR PDF
-                    //Para extraer la posición del spinner
-                    //String.valueOf(spinnerCategorias.getSelectedItemPosition() + 1)
+                    this.guardarReceta();
+                    Toast.makeText(this, "La receta ha sido guardada correctamente",
+                            Toast.LENGTH_LONG).show();
+                    setResult(RESULT_OK);
+                    finish();
                 }
                 break;
             }
             case R.id.itemDescartar:{
-                //TODO FORZAR CIERRE ACTIVIDAD
+                setResult(RESULT_CANCELED);
+                finish();
                 break;
             }
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * Guarda la receta en la base de datos
+     */
+    private void guardarReceta(){
+        TablaPlato tablaPlato = new TablaPlato(this);
+
+        tablaPlato.addPlato(this.edtNombre.getText().toString(), this.generarPdf(),
+                spinnerCategorias.getSelectedItemPosition() + 1);
+    }
+
+    /**
+     * Genera el pdf de la receta de cocina
+     *
+     * @return :String con el paht del pdf
+     */
+    private String generarPdf(){
+        GenerarPdfReceta pdf = new GenerarPdfReceta(getApplicationContext());
+        pdf.openDocument();
+        pdf.addTitulo(this.edtNombre.getText().toString());
+        pdf.addIngredientes(this.ingredientes);
+        pdf.addDescripcion(this.edtDescripReceta.getText().toString());
+        pdf.closeDocument();
+        return pdf.verPathPdf();
     }
 
     /**

@@ -97,7 +97,7 @@
                 android:ems="10"
                 android:gravity="bottom"
                 android:hint="Descripción"
-                android:inputType="textMultiLine|textPersonName"
+                android:inputType="textMultiLine|textCapSentences"
                 android:textSize="24sp" />
 
         </LinearLayout>

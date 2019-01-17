@@ -1,5 +1,6 @@
 package com.example.alberto.facecook.BaseDeDatos.Platos;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -116,5 +117,29 @@ public class TablaPlato {
         this.closeDatabase();
 
         return listaPlatos;
+    }
+
+    /**
+     * Añade en la base de datos un plato nuevo
+     *
+     * @param nombre :String
+     * @param url :String
+     * @param categoria :int
+     */
+    public void addPlato(String nombre, String url, int categoria){
+        /* Se abre la base de datos en modo escritura */
+        this.openDatabaseWrite();
+
+        /* Se insertan los valores que se grabarán */
+        if (this.database != null){
+            ContentValues values = new ContentValues();
+            values.put("nombre", nombre);
+            values.put("url_pdf", url);
+            values.put("id_categoria_plato", categoria);
+            this.database.insert("plato",null,  values);
+        }
+
+        /* Se cierra la base de datos */
+        this.closeDatabase();
     }
 }

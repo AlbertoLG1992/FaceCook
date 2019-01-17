@@ -133,4 +133,28 @@ public class TablaCategoriaPlato {
 
         return total;
     }
+
+    public CategoriaPlato categoriaPorId(int id){
+        CategoriaPlato categoria = new CategoriaPlato();
+        Cursor cursor;
+
+        /* Se abre la base de datos y se extraen los datos haciendo la consulta */
+        this.openDatabaseRead();
+        cursor = this.database.rawQuery("SELECT * FROM categoria_plato " +
+                "WHERE categoria_plato.id = " + id +";", null);
+
+        /* Se recorre el cursor y se rellena el array con el nombre de las categorias */
+        if (cursor.moveToFirst()){
+            do {
+                categoria = new CategoriaPlato(cursor.getInt(0), cursor.getString(1),
+                        BitmapFactory.decodeStream(new ByteArrayInputStream(cursor.getBlob(2))));
+            }while (cursor.moveToNext());
+        }
+
+        /* Se cierran las conexiones */
+        cursor.close();
+        this.closeDatabase();
+
+        return categoria;
+    }
 }

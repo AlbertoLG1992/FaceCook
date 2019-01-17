@@ -23,6 +23,12 @@ public class CategoriaPlato {
     }
 
     /**
+     * Constructor de clase vacío
+     */
+    public CategoriaPlato() {
+    }
+
+    /**
      * Constructor de clase sin el id
      *
      * @param nombre :String
