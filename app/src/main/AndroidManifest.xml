@@ -22,6 +22,8 @@
         <activity
             android:name=".Activities.AgregarRecetaActivity"
             android:windowSoftInputMode="stateHidden"/>
+
+
     </application>
 
 </manifest>

@@ -8,6 +8,7 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:textColorPrimary">@color/colorPrimaryText</item>
         <item name="android:textColorSecondary">@color/colorSecundaryText</item>
+        <item name="android:fontFamily">@font/kavoon</item>
     </style>
 
 </resources>

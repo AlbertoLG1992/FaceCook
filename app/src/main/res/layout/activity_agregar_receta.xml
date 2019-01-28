@@ -34,8 +34,8 @@
                 android:id="@+id/edtTituloReceta"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
                 android:ems="10"
                 android:hint="Título de la Receta"
                 android:inputType="textPersonName"
@@ -45,13 +45,13 @@
                 android:id="@+id/spinnerReceta"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp" />
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="5dp"
                 android:orientation="horizontal">
 
                 <TextView
@@ -93,11 +93,14 @@
                 android:id="@+id/edtDescripReceta"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="10dp"
+                android:layout_marginBottom="0dp"
                 android:ems="10"
                 android:gravity="bottom"
                 android:hint="Descripción"
                 android:inputType="textMultiLine|textCapSentences"
+                android:maxLines="3"
+                android:minLines="1"
+                android:scrollbars="horizontal"
                 android:textSize="24sp" />
 
         </LinearLayout>

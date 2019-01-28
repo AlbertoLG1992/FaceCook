@@ -29,4 +29,5 @@ dependencies {
     implementation 'com.readystatesoftware.sqliteasset:sqliteassethelper:+'
     implementation 'com.github.barteksc:android-pdf-viewer:2.8.1'
     implementation 'com.itextpdf:itextg:5.5.10'
+    implementation "com.airbnb.android:lottie:2.6.0"
 }
