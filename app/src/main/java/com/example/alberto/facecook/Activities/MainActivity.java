@@ -1,13 +1,17 @@
 package com.example.alberto.facecook.Activities;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.example.alberto.facecook.Activities.ChoiceActivity;
@@ -16,8 +20,12 @@ import com.example.alberto.facecook.R;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     /* Elementos */
-    Button btnEntrar;
-    LottieAnimationView lottieAnimationView;
+    private Button btnEntrar;
+    private LottieAnimationView lottieAnimationView;
+    private EditText edtUsuario, edtPassword;
+
+    /* Atributos */
+    private int loopCount = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,32 +43,99 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         /* XML */
         this.btnEntrar = (Button)findViewById(R.id.btnEntrar);
         this.lottieAnimationView = (LottieAnimationView)findViewById(R.id.lottieViewMain);
+        this.edtUsuario = (EditText)findViewById(R.id.edtUsuario);
+        this.edtPassword = (EditText)findViewById(R.id.edtPassword);
 
         /* Clicklable */
         this.btnEntrar.setOnClickListener(this);
         this.lottieAnimationView.setOnClickListener(this);
+
+        /* Añade un listenner a LottieAnimationView */
+        this.lottieAnimationView.addAnimatorListener(loopListener);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.btnEntrar:{
-                Intent intent = new Intent(getApplicationContext(), ChoiceActivity.class);
-                startActivity(intent);
+                if (this.comprobarCamposRellenos()) {
+                    this.vaciarCampos();
+                    Intent intent = new Intent(getApplicationContext(), ChoiceActivity.class);
+                    startActivity(intent);
+                }
                 break;
             }
             case R.id.lottieViewMain:{
-                // TODO CAMBIAR LA IMAGEN
+                this.cargarAnimacion("Enfadado");
                 break;
             }
         }
     }
 
     /**
+     * Vacía los campo de usuario y contraseña
+     */
+    private void vaciarCampos(){
+        this.edtUsuario.setText("");
+        this.edtPassword.setText("");
+    }
+
+    /**
+     * Comprueba que los EditText de usuario y contraseña no estan vacíos
+     *
+     * @return true en caso de que contienen caracteres en su interior y false si estan vacíos
+     */
+    private boolean comprobarCamposRellenos(){
+        if (!this.edtUsuario.getText().toString().isEmpty()){
+            if (!this.edtPassword.getText().toString().isEmpty()){
+                return true;
+            }
+        }
+        Snackbar.make(getCurrentFocus(), "El usuario y la contraseña tienen que estar rellenos",
+                Snackbar.LENGTH_LONG).show();
+        this.cargarAnimacion("Error");
+        return false;
+    }
+
+    /**
+     * Cambia la animación del LottieAnimationView
+     *
+     * @param opcion :String
+     */
+    private void cargarAnimacion(String opcion){
+        if (opcion.equals("Enfadado")){
+            this.lottieAnimationView.setAnimation("a_very_angry_sushi.json");
+        }else if (opcion.equals("Error")){
+            this.lottieAnimationView.setAnimation("x_pop.json");
+        }
+        this.lottieAnimationView.loop(true);
+        this.lottieAnimationView.playAnimation();
+
+        this.loopCount = 1; //Para que vuelva a cargar la animación como en la primera vuelta
+    }
+
+    /**
+     * Listenner de LottieAnimationView
+     */
+    final Animator.AnimatorListener loopListener = new AnimatorListenerAdapter() {
+        @Override public void onAnimationRepeat(Animator animation) {
+            /* Para que en cada vuelta no haga las mismas instrucciones, de esta forma
+             * solo se cargarán en la primera vuelta */
+            if (loopCount == 1) {
+                lottieAnimationView.setAnimation("sushi_fitness.json");
+                lottieAnimationView.loop(true);
+                lottieAnimationView.playAnimation();
+            }
+            loopCount++;
+        }
+    };
+
+    /**
      * Esconde el clor del statur bar
      */
     private void esconderStaturBar(){
-        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+        getWindow().getDecorView().setSystemUiVisibility
+                (View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
             getWindow().setStatusBarColor(Color.TRANSPARENT);
         }
