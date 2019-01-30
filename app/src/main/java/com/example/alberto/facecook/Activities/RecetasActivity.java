@@ -115,10 +115,18 @@ public class RecetasActivity extends AppCompatActivity
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
-
-        CategoriasPlatosDialog dialog = new CategoriasPlatosDialog();
-        dialog.show(getSupportFragmentManager(), "DialogoCategoriasPlatos");
-
+        switch (item.getItemId()){
+            case R.id.itemFiltrarRecetas:{
+                CategoriasPlatosDialog dialog = new CategoriasPlatosDialog();
+                dialog.show(getSupportFragmentManager(), "DialogoCategoriasPlatos");
+                break;
+            }
+            case R.id.itemSiguiente:{
+                Intent intent = new Intent(getApplicationContext(), NavigationActivity.class);
+                startActivity(intent);
+                break;
+            }
+        }
         return super.onOptionsItemSelected(item);
     }
 

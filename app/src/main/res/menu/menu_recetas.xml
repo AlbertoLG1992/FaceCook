@@ -7,4 +7,9 @@
         android:icon="@drawable/ic_tune_white"
         android:title="Filtrar"
         app:showAsAction="always" />
+    <item
+        android:id="@+id/itemSiguiente"
+        android:icon="@drawable/ic_arrow_forward_black_24dp"
+        android:title="Siguiente"
+        app:showAsAction="always" />
 </menu>
