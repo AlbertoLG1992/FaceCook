@@ -13,11 +13,13 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.example.alberto.facecook.Adaptadores.AdapterRecetas;
+import com.example.alberto.facecook.BaseDeDatos.Platos.Plato;
 import com.example.alberto.facecook.Dialog.CategoriasPlatosDialog;
 import com.example.alberto.facecook.R;
 
 public class RecetasActivity extends AppCompatActivity
-        implements CategoriasPlatosDialog.respuestaDialogCategoriasPlatos{
+        implements CategoriasPlatosDialog.respuestaDialogCategoriasPlatos,
+        AdapterRecetas.respuestaOnClickRecyclerViewRecetas{
 
     /* Elementos */
     private Toolbar toolbar;
@@ -147,5 +149,13 @@ public class RecetasActivity extends AppCompatActivity
         if ((requestCode == REQUEST_RECETA_NUEVA) && resultCode == RESULT_OK){
             this.cargarAdaptador();
         }
+    }
+
+    @Override
+    public void onRespuestaOnClickRecyclerViewRecetas(Plato plato) {
+        Intent intent = new Intent(getApplicationContext(), VisorPdfActivity.class);
+        intent.putExtra("titulo", plato.getNombre());
+        intent.putExtra("url", plato.getUrlPdf());
+        startActivity(intent);
     }
 }
