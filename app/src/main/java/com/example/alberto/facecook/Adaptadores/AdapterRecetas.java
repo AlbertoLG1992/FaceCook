@@ -1,5 +1,6 @@
 package com.example.alberto.facecook.Adaptadores;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 
 public class AdapterRecetas extends RecyclerView.Adapter<AdapterRecetas.RecetasViewHolder> {
 
+    /* Atributos */
     private ArrayList<Plato> listaPlatos;
     private respuestaOnClickRecyclerViewRecetas respuesta;
 

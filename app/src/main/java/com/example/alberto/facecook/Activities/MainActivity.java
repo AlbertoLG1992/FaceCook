@@ -56,11 +56,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.btnEntrar:{
-                if (this.comprobarCamposRellenos()) {
+                //if (this.comprobarCamposRellenos()) {
+                //TODO ACTIVAR COMPROBACIÓN CAMPOS RELLENOS
                     this.vaciarCampos();
-                    Intent intent = new Intent(getApplicationContext(), RecetasActivity.class);
+                    Intent intent = new Intent(getApplicationContext(), NavigationActivity.class);
                     startActivity(intent);
-                }
+                //}
                 break;
             }
             case R.id.lottieViewMain:{
