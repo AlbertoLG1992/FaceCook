@@ -4,7 +4,6 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Intent;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Build;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -14,7 +13,6 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.airbnb.lottie.LottieAnimationView;
-import com.example.alberto.facecook.Activities.ChoiceActivity;
 import com.example.alberto.facecook.R;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -60,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.btnEntrar:{
                 if (this.comprobarCamposRellenos()) {
                     this.vaciarCampos();
-                    Intent intent = new Intent(getApplicationContext(), ChoiceActivity.class);
+                    Intent intent = new Intent(getApplicationContext(), RecetasActivity.class);
                     startActivity(intent);
                 }
                 break;

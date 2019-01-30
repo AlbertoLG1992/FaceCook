@@ -31,16 +31,16 @@ public class AgregarRecetaActivity extends AppCompatActivity implements View.OnC
     AddIngredienteDialog.respuestaDialogAddIngrediente, EliminarIngredienteDialog.respuestaDialogEliminarIngredienteDialog{
 
     /* Elementos */
-    Toolbar toolbar;
-    EditText edtNombre;
-    Spinner spinnerCategorias;
-    ImageButton imgBtnAdd,
-                imgBtnDelete;
-    ListView listViewIngredientes;
-    EditText edtDescripReceta;
+    private Toolbar toolbar;
+    private EditText edtNombre;
+    private Spinner spinnerCategorias;
+    private ImageButton imgBtnAdd,
+                        imgBtnDelete;
+    private ListView listViewIngredientes;
+    private EditText edtDescripReceta;
 
     /* Atributos */
-    ArrayList<String> ingredientes;
+    private ArrayList<String> ingredientes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

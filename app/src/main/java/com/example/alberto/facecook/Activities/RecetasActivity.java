@@ -5,32 +5,31 @@ import android.graphics.Color;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.Toast;
 
 import com.example.alberto.facecook.Adaptadores.AdapterRecetas;
-import com.example.alberto.facecook.BaseDeDatos.Platos.Plato;
 import com.example.alberto.facecook.Dialog.CategoriasPlatosDialog;
 import com.example.alberto.facecook.R;
 
-public class RecetasActivity extends AppCompatActivity implements CategoriasPlatosDialog.respuestaDialogCategoriasPlatos,
-    AdapterView.OnItemClickListener{
+public class RecetasActivity extends AppCompatActivity
+        implements CategoriasPlatosDialog.respuestaDialogCategoriasPlatos{
 
     /* Elementos */
-    Toolbar toolbar;
-    FloatingActionButton floatingActionButton;
-    ListView listView;
+    private Toolbar toolbar;
+    private FloatingActionButton floatingActionButton;
+    private RecyclerView recyclerView;
 
     /* Atributos */
-    AdapterRecetas adapterRecetas;
+    private AdapterRecetas adapterRecetas;
+    private GridLayoutManager gridLayoutManager;
 
     /* Variables para las ActivitiesForResult */
-    static final int REQUEST_RECETA_NUEVA = 1;
+    private final int REQUEST_RECETA_NUEVA = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +48,8 @@ public class RecetasActivity extends AppCompatActivity implements CategoriasPlat
                 startActivityForResult(intent, REQUEST_RECETA_NUEVA);
             }
         });
+
+
     }
 
     /**
@@ -58,10 +59,7 @@ public class RecetasActivity extends AppCompatActivity implements CategoriasPlat
         /* XML */
         this.toolbar = (Toolbar)findViewById(R.id.toolbarRecetas);
         this.floatingActionButton = (FloatingActionButton)findViewById(R.id.floatBtnRecetas);
-        this.listView = (ListView)findViewById(R.id.listViewRecetas);
-
-        /* Clickables */
-        this.listView.setOnItemClickListener(this);
+        this.recyclerView = (RecyclerView)findViewById(R.id.rvRecetas);
     }
 
     /**
@@ -89,8 +87,10 @@ public class RecetasActivity extends AppCompatActivity implements CategoriasPlat
      * Método para cargar el adaptador de forma normal
      */
     private void cargarAdaptador(){
-        this.adapterRecetas = new AdapterRecetas(this, getApplicationContext());
-        this.listView.setAdapter(this.adapterRecetas);
+        gridLayoutManager = new GridLayoutManager(this, 2);
+        recyclerView.setLayoutManager(gridLayoutManager);
+        adapterRecetas = new AdapterRecetas(this);
+        recyclerView.setAdapter(adapterRecetas);
     }
 
     /**
@@ -99,8 +99,10 @@ public class RecetasActivity extends AppCompatActivity implements CategoriasPlat
      * @param categoria :String
      */
     private void cargarAdaptadorFiltrado(String categoria){
-        this.adapterRecetas = new AdapterRecetas(this, getApplicationContext(), categoria);
-        this.listView.setAdapter(this.adapterRecetas);
+        gridLayoutManager = new GridLayoutManager(this, 2);
+        recyclerView.setLayoutManager(gridLayoutManager);
+        adapterRecetas = new AdapterRecetas(this, categoria);
+        recyclerView.setAdapter(adapterRecetas);
     }
 
     /**
@@ -131,21 +133,6 @@ public class RecetasActivity extends AppCompatActivity implements CategoriasPlat
         }else {
             this.cargarAdaptadorFiltrado(categoria);
         }
-    }
-
-    /**
-     * Metodo que se ejecuta al pulsar normal sobre el listView
-     */
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id){
-        /* Se extrae el plato del adaptador */
-        Plato plato = (Plato)this.adapterRecetas.getItem(position);
-        /* Se envia el título y la url del pdf en el intent a la nueva actividad
-         * antes de iniciarla */
-        Intent intent = new Intent(getApplicationContext(), VisorPdfActivity.class);
-        intent.putExtra("titulo", plato.getNombre());
-        intent.putExtra("url", plato.getUrlPdf());
-        startActivity(intent);
     }
 
     /**

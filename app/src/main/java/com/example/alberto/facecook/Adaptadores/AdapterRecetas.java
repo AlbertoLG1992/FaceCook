@@ -1,112 +1,91 @@
 package com.example.alberto.facecook.Adaptadores;
 
-import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.support.annotation.NonNull;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.alberto.facecook.Activities.VisorPdfActivity;
 import com.example.alberto.facecook.BaseDeDatos.Platos.Plato;
 import com.example.alberto.facecook.BaseDeDatos.Platos.TablaPlato;
 import com.example.alberto.facecook.R;
 
 import java.util.ArrayList;
 
-public class AdapterRecetas extends BaseAdapter {
+public class AdapterRecetas extends RecyclerView.Adapter<AdapterRecetas.RecetasViewHolder> {
 
-    protected Activity activity;
-    protected ArrayList<Plato> items;
+    private ArrayList<Plato> listaPlatos;
+    private Context context;
 
     /**
      * Constructor de clase
      *
-     * @param activity :Activity
      * @param context :Context
      */
-    public AdapterRecetas(Activity activity, Context context){
-        /* En el mismo constructor se realiza la consulta a la base de datos
-         * y se carga en el arrayList */
+    public AdapterRecetas(Context context){
+        this.context = context;
         TablaPlato tablaPlato = new TablaPlato(context);
-        this.items = tablaPlato.verTodosPlatos();
-        this.activity = activity;
+        this.listaPlatos = tablaPlato.verTodosPlatos();
     }
 
     /**
-     * Constructor de clase parametrizado para poder filtrarse
+     * Constructor de clase para filtrar los platos por categorias
      *
-     * @param activity :Activity
      * @param context :Context
+     * @param categoria :String
      */
-    public AdapterRecetas(Activity activity, Context context, String categoria){
-        /* En el mismo constructor se realiza la consulta a la base de datos
-         * y se carga en el arrayList */
+    public AdapterRecetas(Context context, String categoria){
+        this.context = context;
         TablaPlato tablaPlato = new TablaPlato(context);
-        this.items = tablaPlato.verTodosPlatosFiltrados(categoria);
-        this.activity = activity;
+        this.listaPlatos = tablaPlato.verTodosPlatosFiltrados(categoria);
     }
 
-    /**
-     * Devuelve el total de los elementos cargados en el listView
-     *
-     * @return int
-     */
+    @NonNull
     @Override
-    public int getCount() {
-        return this.items.size();
+    public RecetasViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+        return new RecetasViewHolder(LayoutInflater.from(viewGroup.getContext())
+                .inflate(R.layout.adapter_recetas, viewGroup, false));
     }
 
-    /**
-     * Devuelve el item seleccionado
-     *
-     * @param position :int
-     * @return Object
-     */
     @Override
-    public Object getItem(int position) {
-        return this.items.get(position);
+    public void onBindViewHolder(@NonNull RecetasViewHolder recetasViewHolder, int i) {
+        final Plato plato = listaPlatos.get(i);
+        recetasViewHolder.imgReceta.setImageBitmap(plato.getCategoriaPlato().getFoto());
+        recetasViewHolder.txvNombreReceta.setText(plato.getNombre());
+
+        /* Listener del item pulsado que abrirá la actividad de VisorPdfActivity */
+        recetasViewHolder.view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, VisorPdfActivity.class);
+                intent.putExtra("titulo", plato.getNombre());
+                intent.putExtra("url", plato.getUrlPdf());
+                context.startActivity(intent);
+            }
+        });
     }
 
-    /**
-     * Devuelve el id del item seleccionado
-     *
-     * @param position :int
-     * @return long
-     */
     @Override
-    public long getItemId(int position) {
-        return this.items.get(position).getId();
+    public int getItemCount() {
+        return listaPlatos.size();
     }
 
-    /**
-     * Carga los datos del ArrayList en el ListView
-     *
-     * @param position :int
-     * @param convertView :View
-     * @param parent :ViewGroup
-     * @return View
-     */
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        /* Se carga el View, y en caso de que no se cargue bien se introduce manualmente
-         * los parametros para que detecte el XML el cual tiene que cargar */
-        View view = convertView;
-        if (convertView == null){
-            LayoutInflater inflater = (LayoutInflater)this.activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            view = inflater.inflate(R.layout.adapter_recetas, null);
+    class RecetasViewHolder extends RecyclerView.ViewHolder{
+
+        private ImageView imgReceta;
+        private TextView txvNombreReceta;
+        private View view;
+
+        public RecetasViewHolder(View itemView) {
+            super(itemView);
+            view = itemView;
+            imgReceta = (ImageView)itemView.findViewById(R.id.imgAdapRecetas);
+            txvNombreReceta = (TextView)itemView.findViewById(R.id.txvNombAdapRecetas);
         }
-
-        /* Se extrae el item especifico que toca cargar y se añade a los objetos del XML */
-        Plato plato = this.items.get(position);
-
-        ImageView imgAdapRecetas = (ImageView)view.findViewById(R.id.imgAdapRecetas);
-        imgAdapRecetas.setImageBitmap(plato.getCategoriaPlato().getFoto());
-
-        TextView txvNombreAdapterReceta = (TextView)view.findViewById(R.id.txvNombAdapRecetas);
-        txvNombreAdapterReceta.setText(plato.getNombre());
-
-        return view;
     }
 }

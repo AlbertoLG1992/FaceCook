@@ -14,12 +14,12 @@ import java.io.File;
 public class VisorPdfActivity extends AppCompatActivity {
 
     /* Elementos */
-    PDFView viewPdf;
-    Toolbar toolbar;
+    private PDFView viewPdf;
+    private Toolbar toolbar;
 
     /*Atributos*/
-    String tituloActividad;
-    String urlPdf;
+    private String tituloActividad;
+    private String urlPdf;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
