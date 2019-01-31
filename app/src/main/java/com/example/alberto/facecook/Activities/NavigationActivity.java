@@ -55,7 +55,6 @@ public class NavigationActivity extends AppCompatActivity
      */
     private void iniciarToolbar(String titulo){
         this.toolbar.setTitle(titulo);
-        this.toolbar.setTitleTextColor(Color.WHITE);
         setSupportActionBar(this.toolbar);
     }
 
@@ -93,9 +92,13 @@ public class NavigationActivity extends AppCompatActivity
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
-        CategoriasPlatosDialog dialog = new CategoriasPlatosDialog();
-        dialog.show(getSupportFragmentManager(), "DialogoCategoriasPlatos");
-
+        switch (item.getItemId()){
+            case R.id.itemFiltrarCategorias:{
+                CategoriasPlatosDialog dialog = new CategoriasPlatosDialog();
+                dialog.show(getSupportFragmentManager(), "DialogoCategoriasPlatos");
+                break;
+            }
+        }
         return super.onOptionsItemSelected(item);
     }
 
