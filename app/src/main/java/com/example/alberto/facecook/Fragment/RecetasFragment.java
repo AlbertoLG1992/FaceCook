@@ -52,7 +52,7 @@ public class RecetasFragment extends Fragment{
         this.floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mListener.onFragmentInteraction();
+                mListener.onFragmentInteractionRecetas();
             }
         });
 
@@ -81,7 +81,7 @@ public class RecetasFragment extends Fragment{
      * porque no es necesario, solo será invocado desde el FloatingActionButton
      */
     public interface OnFragmentInteractionListener {
-        void onFragmentInteraction();
+        void onFragmentInteractionRecetas();
     }
 
     /**

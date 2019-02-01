@@ -3,12 +3,15 @@ package com.example.alberto.facecook.Activities;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -16,20 +19,27 @@ import android.widget.Toast;
 import com.example.alberto.facecook.Adaptadores.AdapterRecetas;
 import com.example.alberto.facecook.BaseDeDatos.Platos.Plato;
 import com.example.alberto.facecook.Dialog.CategoriasPlatosDialog;
+import com.example.alberto.facecook.Fragment.CocinerosFragment;
+import com.example.alberto.facecook.Fragment.DatosUsuarioFragment;
 import com.example.alberto.facecook.Fragment.RecetasFragment;
 import com.example.alberto.facecook.R;
 
 public class NavigationActivity extends AppCompatActivity
-        implements RecetasFragment.OnFragmentInteractionListener,
+        implements BottomNavigationView.OnNavigationItemSelectedListener,
+        RecetasFragment.OnFragmentInteractionListener,
+        CocinerosFragment.OnFragmentInteractionListener,
+        DatosUsuarioFragment.OnFragmentInteractionListener,
         AdapterRecetas.respuestaOnClickRecyclerViewRecetas,
         CategoriasPlatosDialog.respuestaDialogCategoriasPlatos {
 
     /* Elementos */
     private Toolbar toolbar;
+    private BottomNavigationView bottomNavigationView;
 
     /* Fragmets */
-    private FragmentTransaction fragmentTransaction;
     private RecetasFragment recetasFragment;
+    private CocinerosFragment cocinerosFragment;
+    private DatosUsuarioFragment datosUsuarioFragment;
 
     /* Variables para las ActivitiesForResult */
     private final int REQUEST_RECETA_NUEVA = 1;
@@ -42,7 +52,7 @@ public class NavigationActivity extends AppCompatActivity
         setContentView(R.layout.activity_navigation);
 
         this.iniciarElementos();
-        this.iniciarToolbar("Navigation Activity");
+        this.iniciarToolbar("Ver Recetas");
         this.iniciarFragments();
     }
 
@@ -52,6 +62,10 @@ public class NavigationActivity extends AppCompatActivity
     private void iniciarElementos(){
         /* XML */
         this.toolbar = (Toolbar)findViewById(R.id.toolbarNavigationActivity);
+        this.bottomNavigationView = (BottomNavigationView)findViewById(R.id.bottomNavigationView);
+
+        /* Clickable */
+        this.bottomNavigationView.setOnNavigationItemSelectedListener(this);
     }
 
     /**
@@ -68,12 +82,11 @@ public class NavigationActivity extends AppCompatActivity
     private void iniciarFragments(){
         /* Iniciar los fragments */
         this.recetasFragment = new RecetasFragment();
-        /* Se inicializa el objeto sobre el que se va a cargar los fragment */
-        this.fragmentTransaction= getSupportFragmentManager().beginTransaction();
-        //getSupportFragmentManager().beginTransaction().add(R.id.contenedorFragment, this.recetasFragment).commit();
-        /* Cargar fragment por defecto */
-        this.fragmentTransaction.add(R.id.contenedorFragment, this.recetasFragment).commit();
+        this.cocinerosFragment = new CocinerosFragment();
+        this.datosUsuarioFragment = new DatosUsuarioFragment();
 
+        /* Cargar fragment por defecto */
+        getSupportFragmentManager().beginTransaction().add(R.id.contenedorFragment, this.recetasFragment).commit();
     }
 
     /**
@@ -86,9 +99,10 @@ public class NavigationActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu){
         getMenuInflater().inflate(R.menu.menu_navigation_activity, menu);
 
+        /* Listener de Search View para buscar recetas */
         MenuItem searchViewItem = menu.findItem(R.id.itemBuscar);
         final SearchView searchView = (SearchView) searchViewItem.getActionView();
-        searchView.setQueryHint("Buscar...");
+        searchView.setQueryHint("Buscar recetas...");
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener(){
 
             @Override
@@ -135,14 +149,76 @@ public class NavigationActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+        switch (menuItem.getItemId()){
+            case R.id.itemRecetas:{
+                this.iniciarToolbar("Ver Recetas");
+                this.cargarFragmentRecetas();
+                return true;
+            }
+            case R.id.itemVerCocineros:{
+                this.iniciarToolbar("Ver Cocineros");
+                this.cargarFragmentCocineros();
+                return true;
+            }
+            case R.id.itemDatosUsuario:{
+                this.iniciarToolbar("Datos Usuario");
+                this.cargarFragmentDatosUsuario();
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Carga el fragment RecetasFragment
+     */
+    private void cargarFragmentRecetas(){
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.contenedorFragment, this.recetasFragment).commit();
+    }
+
+    /**
+     * Carga el fragment CocinerosFragment
+     */
+    private void cargarFragmentCocineros(){
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.contenedorFragment, this.cocinerosFragment).commit();
+    }
+
+    /**
+     * Carga el fragment DatosUsuario
+     */
+    private void cargarFragmentDatosUsuario(){
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.contenedorFragment, this.datosUsuarioFragment).commit();
+    }
+
     /**
      * Método que es ejecutado desde RecetasFragment, se sabe que desde donde se ejecuta
      * es porque se quiere abrir la actividad Nueva Receta
      */
     @Override
-    public void onFragmentInteraction() {
+    public void onFragmentInteractionRecetas() {
         Intent intent = new Intent(getApplicationContext(), AgregarRecetaActivity.class);
         startActivityForResult(intent, REQUEST_RECETA_NUEVA);
+    }
+
+    /**
+     * Método que es ejecutado desde CocinerosFragment
+     */
+    @Override
+    public void onFragmentInteractionCocineros(Uri uri) {
+
+    }
+
+    /**
+     * Método que se ejecuta desde DatosUsuariosFragment
+     */
+    @Override
+    public void onFragmentInteractionDatosUsuarios(Uri uri) {
+
     }
 
     /**
