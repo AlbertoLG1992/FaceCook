@@ -33,6 +33,7 @@ public class NavigationActivity extends AppCompatActivity
 
     /* Variables para las ActivitiesForResult */
     private final int REQUEST_RECETA_NUEVA = 1;
+    private boolean searchViewCerrado = false;
 
 
     @Override
@@ -89,17 +90,28 @@ public class NavigationActivity extends AppCompatActivity
         final SearchView searchView = (SearchView) searchViewItem.getActionView();
         searchView.setQueryHint("Buscar...");
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener(){
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                recetasFragment.cargarAdaptador("Nombre",query);
-                searchView.onActionViewCollapsed();
-                return false;
-            }
 
             @Override
             public boolean onQueryTextChange(String s) {
-                //No es necesario que haga nada
-                return false;
+                /* La variable searchViewCerrado existe porque al cerrar el searchView
+                 * vuelve a ejecutar este método, por lo que para evitar que al volverse
+                 * a ejecutar vuelva a filtrar sin valores y borre el filtrado */
+                if (!searchViewCerrado){
+                    recetasFragment.cargarAdaptador("Nombre",s);
+                }else{
+                    /* Este else es para que una vez se haya pulsado a intro y se cierre el
+                     * searchView se pueda acceder otra vez que se pulse */
+                    searchViewCerrado = false;
+                }
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                searchViewCerrado = true;
+                recetasFragment.cargarAdaptador("Nombre",query);
+                searchView.onActionViewCollapsed();
+                return true;
             }
         });
         return true;
