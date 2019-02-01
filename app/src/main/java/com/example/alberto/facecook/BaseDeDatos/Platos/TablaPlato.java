@@ -85,11 +85,12 @@ public class TablaPlato {
     }
 
     /**
-     * Extrae todos los platos de una categoria especifica de la base de datos
+     * Extrae todos los platos de la base de datos filtrado por categoria
      *
+     * @param categoria :String
      * @return :ArrayList<Plato>
      */
-    public ArrayList<Plato> verTodosPlatosFiltrados(String categoria){
+    public ArrayList<Plato> verTodosPlatosFiltradosCategoria(String categoria){
         ArrayList<Plato> listaPlatos = new ArrayList<Plato>();
         Cursor cursor;
 
@@ -100,6 +101,42 @@ public class TablaPlato {
                         "FROM plato " +
                         "INNER JOIN categoria_plato on categoria_plato.id = plato.id_categoria_plato " +
                         "WHERE categoria_plato.nombre = '" + categoria + "'" +
+                        "ORDER BY plato.nombre ASC;",
+                null);
+
+        /* Se recorre el cursor y se rellena el arrayList */
+        if (cursor.moveToFirst()){
+            do {
+                listaPlatos.add(new Plato(cursor.getInt(0), cursor.getString(1),
+                        cursor.getString(2), cursor.getString(3),
+                        BitmapFactory.decodeStream(new ByteArrayInputStream(cursor.getBlob(4)))));
+            }while (cursor.moveToNext());
+        }
+
+        /* Se cierran las conexiones */
+        cursor.close();
+        this.closeDatabase();
+
+        return listaPlatos;
+    }
+
+    /**
+     * Extrae todos los platos de la base de datos filtrado por nombre
+     *
+     * @param nombre :String
+     * @return :ArrayList<Plato>
+     */
+    public ArrayList<Plato> verTodosPlatosFiltradosNombre(String nombre){
+        ArrayList<Plato> listaPlatos = new ArrayList<Plato>();
+        Cursor cursor;
+
+        /* Se abre la base de datos y se extraen los datos haciendo la consulta */
+        this.openDatabaseRead();
+        cursor = this.database.rawQuery("SELECT plato.id, plato.nombre, " +
+                        "plato.url_pdf, categoria_plato.nombre, categoria_plato.foto " +
+                        "FROM plato " +
+                        "INNER JOIN categoria_plato on categoria_plato.id = plato.id_categoria_plato " +
+                        "WHERE plato.nombre LIKE '%" + nombre + "%'" +
                         "ORDER BY plato.nombre ASC;",
                 null);
 

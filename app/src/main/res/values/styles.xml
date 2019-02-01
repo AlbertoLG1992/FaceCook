@@ -14,6 +14,7 @@
     <style name="AppTheme.Toolbar" parent="AppTheme">
         <item name="android:textColorPrimary">@color/colorWhite</item>
         <item name="android:textColorSecondary">@color/colorWhite</item>
+        <item name="android:textColorHint">@color/colorWhite</item>
     </style>
 
 </resources>

@@ -34,15 +34,25 @@ public class AdapterRecetas extends RecyclerView.Adapter<AdapterRecetas.RecetasV
     }
 
     /**
-     * Constructor de clase para filtrar los platos por categorias
+     * Acualiza el Adapter para filtrar por categorias
      *
      * @param context :Context
      * @param categoria :String
      */
-    public AdapterRecetas(Context context, String categoria){
-        respuesta = (respuestaOnClickRecyclerViewRecetas)context;
+    public void filtrarPorCategoria(Context context, String categoria){
         TablaPlato tablaPlato = new TablaPlato(context);
-        this.listaPlatos = tablaPlato.verTodosPlatosFiltrados(categoria);
+        this.listaPlatos = tablaPlato.verTodosPlatosFiltradosCategoria(categoria);
+    }
+
+    /**
+     * Acualiza el Adapter para filtrar por nombres
+     *
+     * @param context :Context
+     * @param nombre :String
+     */
+    public void filtrarPorNombre(Context context, String nombre){
+        TablaPlato tablaPlato = new TablaPlato(context);
+        this.listaPlatos = tablaPlato.verTodosPlatosFiltradosNombre(nombre);
     }
 
     @NonNull

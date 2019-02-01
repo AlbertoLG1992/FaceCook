@@ -13,9 +13,11 @@
         android:background="?attr/colorPrimary"
         android:elevation="10dp"
         android:minHeight="?attr/actionBarSize"
-        app:theme="@style/AppTheme.Toolbar"
+        android:paddingLeft="10dp"
+        android:paddingRight="15dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:theme="@style/AppTheme.Toolbar" />
 
     <FrameLayout
         android:id="@+id/contenedorFragment"

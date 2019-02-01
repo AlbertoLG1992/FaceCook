@@ -4,11 +4,14 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.example.alberto.facecook.Adaptadores.AdapterRecetas;
 import com.example.alberto.facecook.BaseDeDatos.Platos.Plato;
@@ -81,6 +84,24 @@ public class NavigationActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
         getMenuInflater().inflate(R.menu.menu_navigation_activity, menu);
+
+        MenuItem searchViewItem = menu.findItem(R.id.itemBuscar);
+        final SearchView searchView = (SearchView) searchViewItem.getActionView();
+        searchView.setQueryHint("Buscar...");
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener(){
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                recetasFragment.cargarAdaptador("Nombre",query);
+                searchView.onActionViewCollapsed();
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                //No es necesario que haga nada
+                return false;
+            }
+        });
         return true;
     }
 
@@ -134,7 +155,7 @@ public class NavigationActivity extends AppCompatActivity
      */
     @Override
     public void onRespuestaDialogCategoriasPlatos(String categoria) {
-        this.recetasFragment.cargarAdaptador(categoria);
+        this.recetasFragment.cargarAdaptador("Categoria", categoria);
     }
 
     /**

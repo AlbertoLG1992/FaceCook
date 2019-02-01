@@ -95,18 +95,30 @@ public class RecetasFragment extends Fragment{
     }
 
     /**
-     * Carga el adaptador filtrado por categoria en el recyclerView
+     * Carga el adaptador filtrado por categoria o nombre en el recyclerView
      *
+     * @param categoria :filtraPor
      * @param categoria :String
      */
-    public void cargarAdaptador(String categoria){
-        if (!categoria.equals("NoFiltrar")) {
+    public void cargarAdaptador(String filtraPor, String categoria){
+        if (filtraPor.equals("Categoria")) {
+            if (!categoria.equals("NoFiltrar")) {
+                gridLayoutManager = new GridLayoutManager(getContext(), 2);
+                adapterRecetas = new AdapterRecetas(getContext());
+
+                adapterRecetas.filtrarPorCategoria(getContext(), categoria);
+                recyclerView.setLayoutManager(gridLayoutManager);
+                recyclerView.setAdapter(adapterRecetas);
+            } else {
+                this.cargarAdaptador();
+            }
+        }else{ //Se filtra por nombre de plato
             gridLayoutManager = new GridLayoutManager(getContext(), 2);
+            adapterRecetas = new AdapterRecetas(getContext());
+
+            adapterRecetas.filtrarPorNombre(getContext(), categoria);
             recyclerView.setLayoutManager(gridLayoutManager);
-            adapterRecetas = new AdapterRecetas(getContext(), categoria);
             recyclerView.setAdapter(adapterRecetas);
-        }else {
-            this.cargarAdaptador();
         }
     }
 
