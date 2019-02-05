@@ -8,12 +8,20 @@ import android.os.Build;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.Volley;
+import com.example.alberto.facecook.BaseDeDatos.BDExterna.ControlUsuariosRequest;
 import com.example.alberto.facecook.R;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -56,12 +64,44 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.btnEntrar:{
-                //if (this.comprobarCamposRellenos()) {
-                //TODO ACTIVAR COMPROBACIÓN CAMPOS RELLENOS
-                    this.vaciarCampos();
-                    Intent intent = new Intent(getApplicationContext(), NavigationActivity.class);
-                    startActivity(intent);
-                //}
+                if (this.comprobarCamposRellenos()) {
+
+                    /* Listener para la petición php de login de usuario */
+                    Response.Listener<String> respuesta = new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            try{
+                                JSONObject jsonRespuesta = new JSONObject(response);
+                                String mensaje = jsonRespuesta.getString("mensaje");
+                                switch (mensaje){
+                                    case "Usuario no existe":{
+                                        mostrarMensajeError("El usuario no existe");
+                                        break;
+                                    }
+                                    case "Pass erronea":{
+                                        mostrarMensajeError("La contraseña es erronea");
+                                        break;
+                                    }
+                                    case "Pass correcta":{
+                                        Intent intent = new Intent(getApplicationContext(),
+                                                NavigationActivity.class);
+                                        startActivity(intent);
+                                        vaciarCampos();
+                                        break;
+                                    }
+                                }
+                            }catch (JSONException e){
+                                e.getMessage();
+                            }
+                        }
+                    };
+
+                    ControlUsuariosRequest request = new ControlUsuariosRequest(
+                            edtUsuario.getText().toString(),
+                            edtPassword.getText().toString(), respuesta);
+                    RequestQueue cola = Volley.newRequestQueue(this);
+                    cola.add(request);
+                }
                 break;
             }
             case R.id.lottieViewMain:{
@@ -77,6 +117,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void vaciarCampos(){
         this.edtUsuario.setText("");
         this.edtPassword.setText("");
+        this.edtUsuario.requestFocus();
     }
 
     /**
@@ -90,10 +131,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 return true;
             }
         }
-        Snackbar.make(getCurrentFocus(), "El usuario y la contraseña tienen que estar rellenos",
-                Snackbar.LENGTH_LONG).show();
-        this.cargarAnimacion("Error");
+        this.mostrarMensajeError("El usuario y la contraseña tienen que estar rellenos");
         return false;
+    }
+
+    /**
+     * Muestra un mensaje de error en un Snackbar con una animación de error
+     *
+     * @param mensaje :String
+     */
+    private void mostrarMensajeError(String mensaje){
+        Snackbar.make(getCurrentFocus(), mensaje, Snackbar.LENGTH_LONG).show();
+        this.cargarAnimacion("Error");
     }
 
     /**
