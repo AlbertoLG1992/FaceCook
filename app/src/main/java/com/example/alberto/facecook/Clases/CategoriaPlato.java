@@ -1,4 +1,4 @@
-package com.example.alberto.facecook.BaseDeDatos.CategoriaPlatos;
+package com.example.alberto.facecook.Clases;
 
 import android.graphics.Bitmap;
 

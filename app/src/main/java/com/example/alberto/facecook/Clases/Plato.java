@@ -1,8 +1,6 @@
-package com.example.alberto.facecook.BaseDeDatos.Platos;
+package com.example.alberto.facecook.Clases;
 
 import android.graphics.Bitmap;
-
-import com.example.alberto.facecook.BaseDeDatos.CategoriaPlatos.CategoriaPlato;
 
 public class Plato {
 

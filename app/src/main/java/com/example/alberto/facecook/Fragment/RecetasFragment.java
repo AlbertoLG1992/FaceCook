@@ -1,7 +1,6 @@
 package com.example.alberto.facecook.Fragment;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -12,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.alberto.facecook.Adaptadores.AdapterRecetas;
-import com.example.alberto.facecook.BaseDeDatos.Platos.Plato;
 import com.example.alberto.facecook.R;
 
 public class RecetasFragment extends Fragment{

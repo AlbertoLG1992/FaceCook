@@ -7,10 +7,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 
-import com.example.alberto.facecook.BaseDeDatos.CategoriaPlatos.CategoriaPlato;
-import com.example.alberto.facecook.BaseDeDatos.CategoriaPlatos.TablaCategoriaPlato;
-
-import java.util.ArrayList;
+import com.example.alberto.facecook.BaseDeDatos.BDInterna.TablaCategoriaPlato;
 
 public class CategoriasPlatosDialog extends DialogFragment {
 

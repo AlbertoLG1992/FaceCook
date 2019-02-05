@@ -1,6 +1,5 @@
 package com.example.alberto.facecook.Adaptadores;
 
-import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -10,8 +9,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.alberto.facecook.BaseDeDatos.Platos.Plato;
-import com.example.alberto.facecook.BaseDeDatos.Platos.TablaPlato;
+import com.example.alberto.facecook.Clases.Plato;
+import com.example.alberto.facecook.BaseDeDatos.BDInterna.TablaPlato;
 import com.example.alberto.facecook.R;
 
 import java.util.ArrayList;

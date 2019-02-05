@@ -1,4 +1,4 @@
-package com.example.alberto.facecook.BaseDeDatos;
+package com.example.alberto.facecook.BaseDeDatos.BDInterna;
 
 import android.content.Context;
 

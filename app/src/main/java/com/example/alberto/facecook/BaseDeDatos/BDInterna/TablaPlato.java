@@ -1,4 +1,4 @@
-package com.example.alberto.facecook.BaseDeDatos.Platos;
+package com.example.alberto.facecook.BaseDeDatos.BDInterna;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -6,7 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.BitmapFactory;
 
-import com.example.alberto.facecook.BaseDeDatos.DatabaseOpenHelper;
+import com.example.alberto.facecook.Clases.Plato;
 import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
 
 import java.io.ByteArrayInputStream;

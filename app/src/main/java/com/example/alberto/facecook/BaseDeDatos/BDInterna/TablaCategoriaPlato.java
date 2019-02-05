@@ -1,11 +1,11 @@
-package com.example.alberto.facecook.BaseDeDatos.CategoriaPlatos;
+package com.example.alberto.facecook.BaseDeDatos.BDInterna;
 
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.BitmapFactory;
 
-import com.example.alberto.facecook.BaseDeDatos.DatabaseOpenHelper;
+import com.example.alberto.facecook.Clases.CategoriaPlato;
 import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
 
 import java.io.ByteArrayInputStream;
