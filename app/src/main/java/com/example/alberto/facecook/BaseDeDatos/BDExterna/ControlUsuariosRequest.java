@@ -20,12 +20,14 @@ public class ControlUsuariosRequest extends StringRequest {
      * @param login :String
      * @param pass :String
      * @param listener :Response.Listener<String>
+     * @param listenerError :Response.ErrorListener
      */
-    public ControlUsuariosRequest(String login, String pass, Response.Listener<String> listener){
-        super(Method.POST, URL, listener, null);
+    public ControlUsuariosRequest(String login, String pass, Response.Listener<String> listener ,
+                                  Response.ErrorListener listenerError){
+        super(Method.POST, URL, listener, listenerError);
         this.parametros = new HashMap<>();
-        this.parametros.put("login", login+"");
-        this.parametros.put("pass", pass+"");
+        this.parametros.put("login", login);
+        this.parametros.put("pass", pass);
     }
 
     @Override

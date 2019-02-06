@@ -16,8 +16,10 @@ import android.widget.EditText;
 import com.airbnb.lottie.LottieAnimationView;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.example.alberto.facecook.BaseDeDatos.BDExterna.ControlUsuariosRequest;
+import com.example.alberto.facecook.Dialog.LoginProgressDialog;
 import com.example.alberto.facecook.R;
 
 import org.json.JSONException;
@@ -32,6 +34,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     /* Atributos */
     private int loopCount = 1;
+
+    /* Dialog */
+    private LoginProgressDialog progress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +71,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.btnEntrar:{
                 if (this.comprobarCamposRellenos()) {
 
+                    progress = new LoginProgressDialog(this, "Autenticando",
+                            "Conectando con el servidor...");
+                    progress.execute();
+
                     /* Listener para la petición php de login de usuario */
                     Response.Listener<String> respuesta = new Response.Listener<String>() {
                         @Override
@@ -75,11 +84,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 String mensaje = jsonRespuesta.getString("mensaje");
                                 switch (mensaje){
                                     case "Usuario no existe":{
-                                        mostrarMensajeError("El usuario no existe");
+                                        mostrarMensajeError("usuario");
                                         break;
                                     }
                                     case "Pass erronea":{
-                                        mostrarMensajeError("La contraseña es erronea");
+                                        mostrarMensajeError("pass");
                                         break;
                                     }
                                     case "Pass correcta":{
@@ -93,12 +102,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             }catch (JSONException e){
                                 e.getMessage();
                             }
+                            progress.parar(); //Para parar el progress dialog
+                        }
+                    };
+                    /* Listener para cuando la petición de php no puede llegar a su destino */
+                    Response.ErrorListener respuestaError = new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            mostrarMensajeError("servidor");
+                            progress.parar(); //Para parar el progress dialog
                         }
                     };
 
                     ControlUsuariosRequest request = new ControlUsuariosRequest(
                             edtUsuario.getText().toString(),
-                            edtPassword.getText().toString(), respuesta);
+                            edtPassword.getText().toString(),
+                            respuesta, respuestaError);
                     RequestQueue cola = Volley.newRequestQueue(this);
                     cola.add(request);
                 }
@@ -131,18 +150,38 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 return true;
             }
         }
-        this.mostrarMensajeError("El usuario y la contraseña tienen que estar rellenos");
+        this.mostrarMensajeError("rellenar");
         return false;
     }
 
     /**
      * Muestra un mensaje de error en un Snackbar con una animación de error
      *
-     * @param mensaje :String
+     * @param error :String
      */
-    private void mostrarMensajeError(String mensaje){
-        Snackbar.make(getCurrentFocus(), mensaje, Snackbar.LENGTH_LONG).show();
-        this.cargarAnimacion("Error");
+    private void mostrarMensajeError(String error){
+        String animacion = "Error";
+
+        if (error.equals("usuario")){
+            this.edtUsuario.setError("El usuario no existe");
+            this.edtUsuario.requestFocus();
+            error = "Error al logear";
+
+        } else if (error.equals("pass")){
+            this.edtPassword.setError("La contraseña es erronea");
+            this.edtPassword.requestFocus();
+            error = "Error al logear";
+
+        } else if (error.equals("servidor")){
+            error = "No se puede conectar con el servidor";
+            animacion = "conexion";
+
+        } else if (error.equals("rellenar")){
+            error = "El usuario y la contraseña tienen que estar rellenos";
+
+        }
+        Snackbar.make(getCurrentFocus(), error, Snackbar.LENGTH_LONG).show();
+        this.cargarAnimacion(animacion);
     }
 
     /**
@@ -153,8 +192,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void cargarAnimacion(String opcion){
         if (opcion.equals("Enfadado")){
             this.lottieAnimationView.setAnimation("a_very_angry_sushi.json");
+
         }else if (opcion.equals("Error")){
             this.lottieAnimationView.setAnimation("x_pop.json");
+
+        }else if (opcion.equals("conexion")){
+            this.lottieAnimationView.setAnimation("network-error.json");
+
         }
         this.lottieAnimationView.loop(true);
         this.lottieAnimationView.playAnimation();
