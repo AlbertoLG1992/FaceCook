@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.android.volley.RequestQueue;
@@ -31,6 +32,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button btnEntrar;
     private LottieAnimationView lottieAnimationView;
     private EditText edtUsuario, edtPassword;
+    private TextView txvRegistro;
 
     /* Atributos */
     private int loopCount = 1;
@@ -56,10 +58,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         this.lottieAnimationView = (LottieAnimationView)findViewById(R.id.lottieViewMain);
         this.edtUsuario = (EditText)findViewById(R.id.edtUsuario);
         this.edtPassword = (EditText)findViewById(R.id.edtPassword);
+        this.txvRegistro = (TextView)findViewById(R.id.txvRegistro);
 
         /* Clicklable */
         this.btnEntrar.setOnClickListener(this);
         this.lottieAnimationView.setOnClickListener(this);
+        this.txvRegistro.setOnClickListener(this);
 
         /* Añade un listenner a LottieAnimationView */
         this.lottieAnimationView.addAnimatorListener(loopListener);
@@ -125,6 +129,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
             case R.id.lottieViewMain:{
                 this.cargarAnimacion("Enfadado");
+                break;
+            }
+            case R.id.txvRegistro:{
+                Intent intent = new Intent(getApplicationContext(), RegistroActivity.class);
+                startActivity(intent);
                 break;
             }
         }

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/itemCamara"
+        android:icon="@drawable/ic_add_a_photo_black_24dp"
+        android:title="Abrir cámara" />
+    <item
+        android:id="@+id/itemGaleria"
+        android:icon="@drawable/ic_photo_size_select_actual_black_24dp"
+        android:title="Abrir galería" />
+</menu>

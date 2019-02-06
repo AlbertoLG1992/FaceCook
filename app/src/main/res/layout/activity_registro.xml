@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+    tools:context=".Activities.RegistroActivity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingLeft="20dp"
+            android:paddingTop="30dp"
+            android:paddingRight="20dp"
+            android:paddingBottom="30dp">
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Registro"
+                android:textColor="@color/colorWhite"
+                android:textSize="45sp" />
+
+            <ImageView
+                android:id="@+id/imgUser"
+                android:layout_width="140dp"
+                android:layout_height="137dp"
+                app:srcCompat="@drawable/ic_account_box_black_24dp" />
+
+            <TextView
+                android:id="@+id/txvInfoReg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="*Para insertar una foto, pulse en el icono superior"
+                android:textColor="@color/colorWhite" />
+        </LinearLayout>
+    </ScrollView>
+</android.support.constraint.ConstraintLayout>

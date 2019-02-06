@@ -8,8 +8,7 @@ import android.widget.Toast;
 
 public class LoginProgressDialog extends AsyncTask<String, Integer, String> {
 
-    ProgressDialog progressDialog;
-    Context context;
+    private ProgressDialog progressDialog;
 
     /**
      * Constructor de clase
@@ -17,9 +16,6 @@ public class LoginProgressDialog extends AsyncTask<String, Integer, String> {
      * @param context :Context
      */
     public LoginProgressDialog(Context context, String titulo, String mensaje){
-
-        this.context = context;
-
         this.progressDialog = new ProgressDialog(context);
         this.progressDialog.setTitle(titulo);
         this.progressDialog.setMessage(mensaje);
