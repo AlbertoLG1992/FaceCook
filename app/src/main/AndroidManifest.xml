@@ -11,9 +11,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activities.RegistroActivity"></activity>
-        <activity android:name=".Activities.NavigationActivity" />
-        <activity android:name=".Activities.MainActivity">
+        <activity
+            android:name=".Activities.RegistroActivity"
+            android:windowSoftInputMode="stateHidden"/>
+        <activity
+            android:name=".Activities.NavigationActivity" />
+        <activity
+            android:name=".Activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
