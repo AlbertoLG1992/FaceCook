@@ -20,6 +20,7 @@ public class LoginProgressDialog extends AsyncTask<String, Integer, String> {
         this.progressDialog.setTitle(titulo);
         this.progressDialog.setMessage(mensaje);
         this.progressDialog.setIndeterminate(false);
+        this.progressDialog.setCancelable(false);
         this.progressDialog.setMax(10);
         this.progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
     }
