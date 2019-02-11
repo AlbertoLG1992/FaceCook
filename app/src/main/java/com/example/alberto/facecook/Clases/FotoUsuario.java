@@ -2,10 +2,13 @@ package com.example.alberto.facecook.Clases;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Base64;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -61,7 +64,7 @@ public class FotoUsuario {
 
         /* Se copia en el fichero contenedor los datos del fichero de origen */
         try {
-            Bitmap bitmap = bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), uri);
+            Bitmap bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), uri);
 
             OutputStream os = new FileOutputStream(this.foto);
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, os);
@@ -99,5 +102,19 @@ public class FotoUsuario {
      */
     public Uri getUriFoto(){
         return Uri.fromFile(this.foto);
+    }
+
+    /**
+     * Convierte la imagen en un String
+     *
+     * @return String
+     */
+    public String convertirString(){
+        ByteArrayOutputStream array = new ByteArrayOutputStream();
+        Bitmap bitmap = BitmapFactory.decodeFile(foto.getPath());
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, array);
+        byte[] imagenByte = array.toByteArray();
+        String salida = Base64.encodeToString(imagenByte, Base64.DEFAULT);
+        return salida;
     }
 }

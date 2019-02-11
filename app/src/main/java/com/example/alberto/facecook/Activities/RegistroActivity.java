@@ -3,18 +3,14 @@ package com.example.alberto.facecook.Activities;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.os.StrictMode;
 import android.provider.MediaStore;
-import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
-import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -26,16 +22,22 @@ import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.Volley;
+import com.example.alberto.facecook.BaseDeDatos.BDExterna.ControlUsuariosRequest;
 import com.example.alberto.facecook.Clases.FotoUsuario;
+import com.example.alberto.facecook.Clases.Usuario;
+import com.example.alberto.facecook.Dialog.FechaDatePickerDialog;
+import com.example.alberto.facecook.Dialog.LoginProgressDialog;
 import com.example.alberto.facecook.R;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.channels.FileChannel;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -51,7 +53,9 @@ public class RegistroActivity extends AppCompatActivity implements View.OnClickL
                             txilApellidos,
                             txilFecha,
                             txilTlf,
-                            txilComentarios;
+                            txilComentarios,
+                            txilCorreo;
+    private TextInputEditText txieFecha;
 
     /* Result Codes */
     private final int RESULT_CAMERA = 1;
@@ -60,6 +64,7 @@ public class RegistroActivity extends AppCompatActivity implements View.OnClickL
     /* Atributos */
     private String mCurrentPhotoPath;
     private FotoUsuario fotoUsuario;
+    private LoginProgressDialog progress;
 
 
     @Override
@@ -86,9 +91,12 @@ public class RegistroActivity extends AppCompatActivity implements View.OnClickL
         this.txilFecha = (TextInputLayout)findViewById(R.id.txilFecha);
         this.txilTlf = (TextInputLayout)findViewById(R.id.txilTlf);
         this.txilComentarios = (TextInputLayout)findViewById(R.id.txilComentarios);
+        this.txilCorreo = (TextInputLayout)findViewById(R.id.txilCorreo);
+        this.txieFecha = (TextInputEditText)findViewById(R.id.txieFecha);
 
         /* Clickable */
         this.imgUser.setOnClickListener(this);
+        this.txieFecha.setOnClickListener(this);
     }
 
     private void iniciarToolbar() {
@@ -118,6 +126,9 @@ public class RegistroActivity extends AppCompatActivity implements View.OnClickL
     public boolean onOptionsItemSelected(MenuItem item){
         switch (item.getItemId()){
             case R.id.itemGuardar:{
+                if (comprobarCamposRellenos()){
+                    subirUsuario();
+                }
                 break;
             }
             case R.id.itemDescartar:{
@@ -125,6 +136,144 @@ public class RegistroActivity extends AppCompatActivity implements View.OnClickL
             }
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * Sube un usuario a la base de datos externa
+     */
+    private void subirUsuario(){
+        progress = new LoginProgressDialog(this, "Creando usuario",
+                "Conectando con el servidor...");
+        progress.execute();
+
+        Usuario usuario = new Usuario(
+                this.fotoUsuario,
+                this.txilNick.getEditText().getText().toString(),
+                this.txilPass.getEditText().getText().toString(),
+                this.txilNombre.getEditText().getText().toString(),
+                this.txilApellidos.getEditText().getText().toString(),
+                this.txieFecha.getText().toString(),
+                this.txilCorreo.getEditText().getText().toString(),
+                this.txilTlf.getEditText().getText().toString(),
+                this.txilComentarios.getEditText().getText().toString());
+
+        Response.Listener<String> respuesta = new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try{
+                    JSONObject jsonRespuesta = new JSONObject(response);
+                    String mensaje = jsonRespuesta.getString("mensaje");
+                    switch (mensaje){
+                        case "El usuario se ha guardado correctamente":{
+                            mostrarSnackbar("El usuario se ha creado correctamente");
+                            //TODO BORRAR LOS CAMPOS AL CREARSE
+                            //TODO BORRAR DE MEMORIA EN MOVIL LA FOTO
+                            break;
+                        }
+                        case "El usuario ya existe en la Base de Datos":{
+                            mostrarSnackbar("Error, el Nick ya está en uso");
+                            txilNick.setError("Intenta con otro nick");
+                            break;
+                        }
+                        default:{
+                            mostrarSnackbar("Algo raro le pasa al servidor con el usuario");
+                            break;
+                        }
+                    }
+                }catch (JSONException e){
+                    e.getMessage();
+                }
+                progress.parar(); //Para parar el progress dialog
+            }
+        };
+        Response.ErrorListener errorRespuesta = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                //Si existe un error
+                mostrarSnackbar("Error al conectar con el servidor");
+                progress.parar(); //Para parar el progress dialog
+            }
+        };
+        ControlUsuariosRequest request = new ControlUsuariosRequest(usuario, respuesta, errorRespuesta);
+        RequestQueue cola = Volley.newRequestQueue(this);
+        cola.add(request);
+    }
+
+    /**
+     * Comprueba que todos los campos para la creación de usuario estan correctos
+     *
+     * @return True en caso de que todos los campos esten rellenos y false en caso contrario
+     */
+    private boolean comprobarCamposRellenos(){
+        String mensajeError = "ERROR, compruebe que todos los campos estan rellenos";
+        boolean camposRellenos = true;
+
+        if (!this.fotoUsuario.estaCargada()){
+            camposRellenos = false;
+            mensajeError = "Es necesario insertar una foto de usuario.\n\t" +
+                    "Pulsa en el icono principal para ello.";
+        }
+
+        if (this.txilNick.getEditText().getText().toString().isEmpty()){
+            camposRellenos = false;
+            this.txilNick.setError("El nick no puede estar en blanco");
+        }else {
+            this.txilNick.setErrorEnabled(false);
+        }
+
+        if (this.txilPass.getEditText().getText().toString().isEmpty()){
+            camposRellenos = false;
+            this.txilPass.setError("La contraseña no puede estar en blanco");
+        }else {
+            this.txilPass.setErrorEnabled(false);
+        }
+
+        if (this.txilNombre.getEditText().getText().toString().isEmpty()){
+            camposRellenos = false;
+            this.txilNombre.setError("El nombre no puede estar en blanco");
+        }else {
+            this.txilNombre.setErrorEnabled(false);
+        }
+
+        if (this.txilApellidos.getEditText().getText().toString().isEmpty()){
+            camposRellenos = false;
+            this.txilApellidos.setError("Los apellidos no pueden estar en blanco");
+        }else {
+            this.txilApellidos.setErrorEnabled(false);
+        }
+
+        if (this.txieFecha.getText().toString().isEmpty()){
+            camposRellenos = false;
+            this.txilFecha.setError("La fecha no puede estar en blanco");
+        }else {
+            this.txilFecha.setErrorEnabled(false);
+        }
+
+        if (this.txilCorreo.getEditText().getText().toString().isEmpty()){
+            camposRellenos = false;
+            this.txilCorreo.setError("El correo no puede estar en blanco");
+        }else {
+            this.txilCorreo.setErrorEnabled(false);
+        }
+
+        if (this.txilTlf.getEditText().getText().toString().isEmpty()){
+            camposRellenos = false;
+            this.txilTlf.setError("El teléfono no puede estar en blanco");
+        }else {
+            this.txilTlf.setErrorEnabled(false);
+        }
+
+        if (this.txilComentarios.getEditText().getText().toString().isEmpty()){
+            camposRellenos = false;
+            this.txilComentarios.setError("Los comentarios no pueden estar en blanco");
+        }else {
+            this.txilComentarios.setErrorEnabled(false);
+        }
+
+        if (!camposRellenos){
+            mostrarSnackbar(mensajeError);
+        }
+        return camposRellenos;
     }
 
     @Override
@@ -136,6 +285,11 @@ public class RegistroActivity extends AppCompatActivity implements View.OnClickL
                 popup.inflate(R.menu.popup_menu_foto);
                 popup.show();
                 break;
+            }
+            case R.id.txieFecha:{
+                FechaDatePickerDialog dialog = new FechaDatePickerDialog();
+                dialog.show(getSupportFragmentManager(), "datePiker");
+
             }
         }
     }
@@ -220,8 +374,7 @@ public class RegistroActivity extends AppCompatActivity implements View.OnClickL
                 this.imgUser.setImageURI(this.fotoUsuario.getUriFoto());
                 Log.i("onActivityResult_CAMERA", "La imagen se ha cargado correctamente");
             }else {
-                Toast.makeText(this, "La imagen no se ha guardado bien",
-                        Toast.LENGTH_LONG).show();
+                mostrarSnackbar("La imagen no se ha guardado bien");
             }
         }
         if (requestCode == RESULT_GALERY && resultCode == RESULT_OK){
@@ -229,11 +382,8 @@ public class RegistroActivity extends AppCompatActivity implements View.OnClickL
             if (this.fotoUsuario.existeFoto()){
                 this.imgUser.setImageURI(this.fotoUsuario.getUriFoto());
                 Log.i("onActivityResult_Galery", "La imagen se ha cargado correctamente");
-
-                //this.fotoCambiada = true;
             }else {
-                Toast.makeText(this, "La imagen no se ha guardado bien",
-                        Toast.LENGTH_LONG).show();
+                mostrarSnackbar("La imagen no se ha guardado bien");
             }
         }
     }
@@ -247,8 +397,7 @@ public class RegistroActivity extends AppCompatActivity implements View.OnClickL
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
                 requestPermissions(new String[]{Manifest.permission.CAMERA}, 100);
-                Snackbar.make(getCurrentFocus(), "Error al cargar los permisos, vuelva a intentarlo",
-                        Snackbar.LENGTH_LONG).show();
+                mostrarSnackbar("Error al cargar los permisos, vuelva a intentarlo");
                 return false;
             }else{
                 Log.i("CheckPermisionCamera", "Permisos de cámara cargados correctamente");
@@ -273,8 +422,7 @@ public class RegistroActivity extends AppCompatActivity implements View.OnClickL
                 requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
                         Manifest.permission.READ_EXTERNAL_STORAGE}, 100);
 
-                Snackbar.make(getCurrentFocus(), "Error al cargar los permisos, vuelva a intentarlo",
-                        Snackbar.LENGTH_LONG).show();
+                mostrarSnackbar("Error al cargar los permisos, vuelva a intentarlo");
                 return false;
             }else{
                 Log.i("checkPermisionWriteRead", "Permisos de lectura y escritura " +
@@ -283,5 +431,9 @@ public class RegistroActivity extends AppCompatActivity implements View.OnClickL
             }
         }
         return true;
+    }
+
+    private void mostrarSnackbar(String mensaje){
+        Snackbar.make(getCurrentFocus(), mensaje, Snackbar.LENGTH_LONG).show();
     }
 }

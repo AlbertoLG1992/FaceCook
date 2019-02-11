@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.toolbox.StringRequest;
+import com.example.alberto.facecook.Clases.Usuario;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,6 +29,42 @@ public class ControlUsuariosRequest extends StringRequest {
         this.parametros = new HashMap<>();
         this.parametros.put("login", login);
         this.parametros.put("pass", pass);
+    }
+
+    /**
+     * Constructor para comprobar si existe un usuario
+     *
+     * @param existe :String
+     * @param listener :Response.Listener<String>
+     * @param listenerError :Response.ErrorListener
+     */
+    public ControlUsuariosRequest(String existe, Response.Listener<String> listener ,
+                                  Response.ErrorListener listenerError){
+        super(Method.POST, URL, listener, listenerError);
+        this.parametros = new HashMap<>();
+        this.parametros.put("existe", existe);
+    }
+
+    /**
+     * Constructor para instanciar un usuario en la base de datos
+     *
+     * @param usuario :Usuario
+     * @param listener :Response.Listener<String>
+     * @param listenerError :Response.ErrorListener
+     */
+    public ControlUsuariosRequest(Usuario usuario, Response.Listener<String> listener ,
+                                  Response.ErrorListener listenerError){
+        super(Method.POST, URL, listener, listenerError);
+        this.parametros = new HashMap<>();
+        this.parametros.put("imagen", usuario.getFotoUsuario().convertirString());
+        this.parametros.put("nick", usuario.getNick());
+        this.parametros.put("pass", usuario.getPass());
+        this.parametros.put("nombre", usuario.getNombre());
+        this.parametros.put("apellidos", usuario.getApellidos());
+        this.parametros.put("fecha_nacimiento", usuario.getFechaNacimiento());
+        this.parametros.put("correo", usuario.getCorreoElectronico());
+        this.parametros.put("tlf", usuario.getTlf());
+        this.parametros.put("comentarios", usuario.getComentarios());
     }
 
     @Override
