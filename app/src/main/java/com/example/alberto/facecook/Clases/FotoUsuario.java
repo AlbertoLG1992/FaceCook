@@ -80,9 +80,10 @@ public class FotoUsuario {
      * Comprueba que la foto no este cargada anteriormente, en caso de que exista la borra
      * para crear otra y que no se acumulen
      */
-    private void borrarFotoAnterior(){
+    public void borrarFotoAnterior(){
         if (this.estaCargada()){
             this.foto.delete();
+            this.fotoCargada = false;
         }
     }
 

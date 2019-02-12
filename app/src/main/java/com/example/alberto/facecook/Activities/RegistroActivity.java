@@ -126,12 +126,13 @@ public class RegistroActivity extends AppCompatActivity implements View.OnClickL
     public boolean onOptionsItemSelected(MenuItem item){
         switch (item.getItemId()){
             case R.id.itemGuardar:{
-                if (comprobarCamposRellenos()){
-                    subirUsuario();
+                if (this.comprobarCamposRellenos()){
+                    this.subirUsuario();
                 }
                 break;
             }
             case R.id.itemDescartar:{
+                this.vaciarCampos();
                 break;
             }
         }
@@ -166,8 +167,9 @@ public class RegistroActivity extends AppCompatActivity implements View.OnClickL
                     switch (mensaje){
                         case "El usuario se ha guardado correctamente":{
                             mostrarSnackbar("El usuario se ha creado correctamente");
-                            //TODO BORRAR LOS CAMPOS AL CREARSE
-                            //TODO BORRAR DE MEMORIA EN MOVIL LA FOTO
+                            vaciarCampos();
+                            fotoUsuario.borrarFotoAnterior(); //Para que no se acumulen en memoria
+                            txilNick.requestFocus();
                             break;
                         }
                         case "El usuario ya existe en la Base de Datos":{
@@ -200,7 +202,7 @@ public class RegistroActivity extends AppCompatActivity implements View.OnClickL
     }
 
     /**
-     * Comprueba que todos los campos para la creación de usuario estan correctos
+     * Comprueba que todos los campos para la creación de usuario estan rellenos
      *
      * @return True en caso de que todos los campos esten rellenos y false en caso contrario
      */
@@ -289,7 +291,7 @@ public class RegistroActivity extends AppCompatActivity implements View.OnClickL
             case R.id.txieFecha:{
                 FechaDatePickerDialog dialog = new FechaDatePickerDialog();
                 dialog.show(getSupportFragmentManager(), "datePiker");
-
+                break;
             }
         }
     }
@@ -351,7 +353,8 @@ public class RegistroActivity extends AppCompatActivity implements View.OnClickL
                 ".jpg",         /* suffix */
                 storageDir      /* directory */
         );
-
+        /* Se guarda la ruta donde está el archivo, que es desde donde se recogerá en
+         * el onResult de la cámara */
         mCurrentPhotoPath = image.getAbsolutePath();
         Log.d("tag","el path de la imagen es = " + mCurrentPhotoPath);
         return image;
@@ -386,6 +389,32 @@ public class RegistroActivity extends AppCompatActivity implements View.OnClickL
                 mostrarSnackbar("La imagen no se ha guardado bien");
             }
         }
+    }
+
+    /**
+     * Vacía todos los elementos de la actividad y elimina los errores
+     */
+    private void vaciarCampos(){
+        this.txilNick.getEditText().setText("");
+        this.txilPass.getEditText().setText("");
+        this.txilNombre.getEditText().setText("");
+        this.txilApellidos.getEditText().setText("");
+        this.txilFecha.getEditText().setText("");
+        this.txilCorreo.getEditText().setText("");
+        this.txilTlf.getEditText().setText("");
+        this.txilComentarios.getEditText().setText("");
+
+        this.imgUser.setImageResource(R.drawable.ic_person_black_24dp);
+        this.fotoUsuario.borrarFotoAnterior();
+
+        this.txilNick.setErrorEnabled(false);
+        this.txilPass.setErrorEnabled(false);
+        this.txilNombre.setErrorEnabled(false);
+        this.txilApellidos.setErrorEnabled(false);
+        this.txilFecha.setErrorEnabled(false);
+        this.txilCorreo.setErrorEnabled(false);
+        this.txilTlf.setErrorEnabled(false);
+        this.txilComentarios.setErrorEnabled(false);
     }
 
     /**
@@ -433,6 +462,11 @@ public class RegistroActivity extends AppCompatActivity implements View.OnClickL
         return true;
     }
 
+    /**
+     * Muestra un mensaje en Snackbar
+     *
+     * @param mensaje :String
+     */
     private void mostrarSnackbar(String mensaje){
         Snackbar.make(getCurrentFocus(), mensaje, Snackbar.LENGTH_LONG).show();
     }
