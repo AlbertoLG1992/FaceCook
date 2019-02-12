@@ -98,6 +98,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                     case "Pass correcta":{
                                         Intent intent = new Intent(getApplicationContext(),
                                                 NavigationActivity.class);
+                                        intent.putExtra("nombre", edtUsuario.getText().toString());
                                         startActivity(intent);
                                         vaciarCampos();
                                         break;

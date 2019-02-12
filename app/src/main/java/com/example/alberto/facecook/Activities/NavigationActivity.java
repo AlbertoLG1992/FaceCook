@@ -11,6 +11,7 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.example.alberto.facecook.Adaptadores.AdapterRecetas;
 import com.example.alberto.facecook.Clases.Plato;
@@ -39,17 +40,24 @@ public class NavigationActivity extends AppCompatActivity
 
     /* Variables para las ActivitiesForResult */
     private final int REQUEST_RECETA_NUEVA = 1;
-    private boolean searchViewCerrado = false;
 
+    /* Variables */
+    private boolean searchViewCerrado = false;
+    private Menu menuDeItems;
+    private String nombreUsuarioActivo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation);
 
+        /* Se extrae del intent el usuario que se ha logueado */
+        this.nombreUsuarioActivo = getIntent().getStringExtra("nombre");
+
         this.iniciarElementos();
         this.iniciarToolbar("Ver Recetas");
         this.iniciarFragments();
+        this.enviarCoordenadasServidor();
     }
 
     /**
@@ -94,6 +102,7 @@ public class NavigationActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
         getMenuInflater().inflate(R.menu.menu_navigation_activity, menu);
+        this.menuDeItems = menu;
 
         /* Listener de Search View para buscar recetas */
         MenuItem searchViewItem = menu.findItem(R.id.itemBuscar);
@@ -149,22 +158,43 @@ public class NavigationActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()){
             case R.id.itemRecetas:{
-                this.iniciarToolbar("Ver Recetas");
+                getSupportActionBar().setTitle("Ver Recetas");
+                this.mostrarItemsMenu("recetas");
                 this.cargarFragmentRecetas();
                 return true;
             }
             case R.id.itemVerCocineros:{
-                this.iniciarToolbar("Ver Cocineros");
+                getSupportActionBar().setTitle("Ver Cocineros");
+                this.mostrarItemsMenu("cocineros");
                 this.cargarFragmentCocineros();
                 return true;
             }
             case R.id.itemDatosUsuario:{
-                this.iniciarToolbar("Datos Usuario");
+                getSupportActionBar().setTitle("Mis Datos");
+                this.mostrarItemsMenu("usuario");
                 this.cargarFragmentDatosUsuario();
                 return true;
             }
         }
         return false;
+    }
+
+    /**
+     * Muestra y oculta los items de los menús dependiendo del fragment actual
+     *
+     * @param ver :string
+     */
+    private void mostrarItemsMenu(String ver){
+        MenuItem searchViewItemRecetas = menuDeItems.findItem(R.id.itemBuscar);
+        MenuItem menuItemFiltrarRecetas = menuDeItems.findItem(R.id.itemFiltrarCategorias);
+
+        if (ver.equals("recetas")){
+            searchViewItemRecetas.setVisible(true);
+            menuItemFiltrarRecetas.setVisible(true);
+        }else {
+            searchViewItemRecetas.setVisible(false);
+            menuItemFiltrarRecetas.setVisible(false);
+        }
     }
 
     /**
@@ -254,5 +284,9 @@ public class NavigationActivity extends AppCompatActivity
         if ((requestCode == REQUEST_RECETA_NUEVA) && resultCode == RESULT_OK){
             this.recetasFragment.cargarAdaptador();
         }
+    }
+
+    private void enviarCoordenadasServidor(){
+        //TODO ENVIAR COORDENADAS AL SERVIDOR
     }
 }
