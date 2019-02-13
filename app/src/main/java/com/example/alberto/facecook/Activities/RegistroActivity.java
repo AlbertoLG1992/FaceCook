@@ -41,11 +41,13 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class RegistroActivity extends AppCompatActivity implements View.OnClickListener,
         PopupMenu.OnMenuItemClickListener {
 
     /* Elementos */
-    private ImageView imgUser;
+    private CircleImageView imgUser;
     private Toolbar toolbar;
     private TextInputLayout txilNick,
                             txilPass,
@@ -82,7 +84,7 @@ public class RegistroActivity extends AppCompatActivity implements View.OnClickL
 
     private void iniciarElementos(){
         /* XML */
-        this.imgUser = (ImageView)findViewById(R.id.imgUser);
+        this.imgUser = (CircleImageView)findViewById(R.id.imgUser);
         this.toolbar = (Toolbar)findViewById(R.id.toolbarRegistro);
         this.txilNick = (TextInputLayout)findViewById(R.id.txilNick);
         this.txilPass = (TextInputLayout)findViewById(R.id.txilPass);
@@ -127,7 +129,9 @@ public class RegistroActivity extends AppCompatActivity implements View.OnClickL
         switch (item.getItemId()){
             case R.id.itemGuardar:{
                 if (this.comprobarCamposRellenos()){
-                    this.subirUsuario();
+                    if (comprobarCamposCorrectos()) {
+                        this.subirUsuario();
+                    }
                 }
                 break;
             }
@@ -166,10 +170,10 @@ public class RegistroActivity extends AppCompatActivity implements View.OnClickL
                     String mensaje = jsonRespuesta.getString("mensaje");
                     switch (mensaje){
                         case "El usuario se ha guardado correctamente":{
-                            mostrarSnackbar("El usuario se ha creado correctamente");
-                            vaciarCampos();
+                            Toast.makeText(getApplicationContext(), "El usuario se ha creado " +
+                                    "correctamente", Toast.LENGTH_LONG).show();
                             fotoUsuario.borrarFotoAnterior(); //Para que no se acumulen en memoria
-                            txilNick.requestFocus();
+                            finish(); //Se cierra la Actividad
                             break;
                         }
                         case "El usuario ya existe en la Base de Datos":{
@@ -199,6 +203,11 @@ public class RegistroActivity extends AppCompatActivity implements View.OnClickL
         ControlUsuariosRequest request = new ControlUsuariosRequest(usuario, respuesta, errorRespuesta);
         RequestQueue cola = Volley.newRequestQueue(this);
         cola.add(request);
+    }
+
+    private boolean comprobarCamposCorrectos(){
+        //TODO COMPROBAR CAMPOS CORRECTOS
+        return true;
     }
 
     /**
