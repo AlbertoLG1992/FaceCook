@@ -32,20 +32,6 @@ public class ControlUsuariosRequest extends StringRequest {
     }
 
     /**
-     * Constructor para comprobar si existe un usuario
-     *
-     * @param existe :String
-     * @param listener :Response.Listener<String>
-     * @param listenerError :Response.ErrorListener
-     */
-    public ControlUsuariosRequest(String existe, Response.Listener<String> listener ,
-                                  Response.ErrorListener listenerError){
-        super(Method.POST, URL, listener, listenerError);
-        this.parametros = new HashMap<>();
-        this.parametros.put("existe", existe);
-    }
-
-    /**
      * Constructor para instanciar un usuario en la base de datos
      *
      * @param usuario :Usuario

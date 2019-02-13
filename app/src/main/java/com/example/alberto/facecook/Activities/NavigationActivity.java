@@ -11,7 +11,6 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.example.alberto.facecook.Adaptadores.AdapterRecetas;
 import com.example.alberto.facecook.Clases.Plato;
@@ -219,6 +218,7 @@ public class NavigationActivity extends AppCompatActivity
     private void cargarFragmentDatosUsuario(){
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.contenedorFragment, this.datosUsuarioFragment).commit();
+        this.datosUsuarioFragment.cargarUsuario(this, this.nombreUsuarioActivo);
     }
 
     /**
@@ -243,7 +243,7 @@ public class NavigationActivity extends AppCompatActivity
      * Método que se ejecuta desde DatosUsuariosFragment
      */
     @Override
-    public void onFragmentInteractionDatosUsuarios(Uri uri) {
+    public void onFragmentInteractionDatosUsuarios() {
 
     }
 
