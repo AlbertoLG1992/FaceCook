@@ -1,8 +1,10 @@
 package com.example.alberto.facecook.Activities;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -18,7 +20,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
@@ -67,6 +68,7 @@ public class RegistroActivity extends AppCompatActivity implements View.OnClickL
     private String mCurrentPhotoPath;
     private FotoUsuario fotoUsuario;
     private LoginProgressDialog progress;
+    private double locatX, locatY;
 
 
     @Override
@@ -130,7 +132,9 @@ public class RegistroActivity extends AppCompatActivity implements View.OnClickL
             case R.id.itemGuardar:{
                 if (this.comprobarCamposRellenos()){
                     if (comprobarCamposCorrectos()) {
-                        this.subirUsuario();
+                        if (getCoordenadas()) {
+                            this.subirUsuario();
+                        }
                     }
                 }
                 break;
@@ -141,6 +145,25 @@ public class RegistroActivity extends AppCompatActivity implements View.OnClickL
             }
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * Método para obtener latitud y longitud
+     * @return
+     */
+    private boolean getCoordenadas(){
+        if (checkPermisionLocation()){
+            LocationManager locManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+            if (locManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
+                //TODO EXTRAER COORDENADAS
+                return true;
+            }else {
+                this.mostrarSnackbar("Es necesario activar el GPS para poder registrarse");
+                return false;
+            }
+        }else {
+            return false;
+        }
     }
 
     /**
@@ -465,6 +488,28 @@ public class RegistroActivity extends AppCompatActivity implements View.OnClickL
             }else{
                 Log.i("checkPermisionWriteRead", "Permisos de lectura y escritura " +
                         "cargados correctamente");
+                return true;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Valida los permisos para acceder a la localización
+     *
+     * @return :True si los permisos estan cargados, en caso negativo los pide
+     */
+    private boolean checkPermisionLocation(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 100);
+                mostrarSnackbar("Error al cargar los permisos de localización, " +
+                        "vuelva a intentarlo");
+                return false;
+            }else{
+                Log.i("checkPermisionLocation", "Permisos de localización cargados " +
+                        "correctamente");
                 return true;
             }
         }
