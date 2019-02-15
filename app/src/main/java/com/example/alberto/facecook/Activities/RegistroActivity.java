@@ -229,8 +229,52 @@ public class RegistroActivity extends AppCompatActivity implements View.OnClickL
         cola.add(request);
     }
 
+    /**
+     * Evita que los campos se puedan introducir mal
+     *
+     * @return true en caso de que todos los campos esten correcto
+     */
     private boolean comprobarCamposCorrectos(){
-        //TODO COMPROBAR CAMPOS CORRECTOS
+        boolean camposCorrectos = true;
+        //Comprueba que sea entero
+        if (!isInteger(this.txilTlf.getEditText().getText().toString())) {
+            camposCorrectos = false;
+            this.txilTlf.setError("El télefono solo debe de tener números...");
+        }else {
+            //Comprueba que el tamaño sea 9
+            if (this.txilTlf.getEditText().getText().toString().length() != 9){
+                camposCorrectos = false;
+                this.txilTlf.setError("El tamaño del télefono tiene que ser 9");
+            }else {
+                this.txilTlf.setErrorEnabled(false);
+            }
+        }
+
+        //Comprueba que el correo contiene una @
+        if (!this.txilCorreo.getEditText().getText().toString().contains("@")){
+            camposCorrectos = false;
+            this.txilCorreo.setError("Email invalido");
+        }else {
+            this.txilCorreo.setErrorEnabled(false);
+        }
+        if (!camposCorrectos){
+            mostrarSnackbar("ERROR, compruebe que todos los campos están correctos");
+        }
+        return camposCorrectos;
+    }
+
+    /**
+     * Comprueba que un String es entero
+     *
+     * @param mensaje :String
+     * @return true en caso de que el string sea entero
+     */
+    private boolean isInteger(String mensaje){
+        for (int i = 0; i < mensaje.length(); i++){
+            if (!Character.isDigit(mensaje.charAt(i))){
+                return false;
+            }
+        }
         return true;
     }
 
