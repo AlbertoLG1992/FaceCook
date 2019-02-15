@@ -13,9 +13,11 @@ public class Usuario {
                     correoElectronico,
                     tlf,
                     comentarios;
+    private double longitud, latitud;
 
     public Usuario(FotoUsuario fotoUsuario, String nick, String pass, String nombre, String apellidos,
-                   String fechaNacimiento, String correoElectronico, String tlf, String comentarios) {
+                   String fechaNacimiento, String correoElectronico, String tlf, String comentarios,
+                   double longitud, double latitud) {
         this.fotoUsuario = fotoUsuario;
         this.nick = nick;
         this.pass = pass;
@@ -25,6 +27,8 @@ public class Usuario {
         this.correoElectronico = correoElectronico;
         this.tlf = tlf;
         this.comentarios = comentarios;
+        this.longitud = longitud;
+        this.latitud = latitud;
     }
 
     public FotoUsuario getFotoUsuario() {
@@ -97,5 +101,21 @@ public class Usuario {
 
     public void setComentarios(String comentarios) {
         this.comentarios = comentarios;
+    }
+
+    public double getLongitud() {
+        return longitud;
+    }
+
+    public void setLongitud(double longitud) {
+        this.longitud = longitud;
+    }
+
+    public double getLatitud() {
+        return latitud;
+    }
+
+    public void setLatitud(double latitud) {
+        this.latitud = latitud;
     }
 }

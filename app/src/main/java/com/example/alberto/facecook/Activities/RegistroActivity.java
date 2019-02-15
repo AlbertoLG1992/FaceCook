@@ -1,10 +1,8 @@
 package com.example.alberto.facecook.Activities;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -32,6 +30,7 @@ import com.example.alberto.facecook.Clases.FotoUsuario;
 import com.example.alberto.facecook.Clases.Usuario;
 import com.example.alberto.facecook.Dialog.FechaDatePickerDialog;
 import com.example.alberto.facecook.Dialog.LoginProgressDialog;
+import com.example.alberto.facecook.Localizacion.LocalizacionListener;
 import com.example.alberto.facecook.R;
 
 import org.json.JSONException;
@@ -68,7 +67,7 @@ public class RegistroActivity extends AppCompatActivity implements View.OnClickL
     private String mCurrentPhotoPath;
     private FotoUsuario fotoUsuario;
     private LoginProgressDialog progress;
-    private double locatX, locatY;
+    private double longitud, latitud;
 
 
     @Override
@@ -153,9 +152,10 @@ public class RegistroActivity extends AppCompatActivity implements View.OnClickL
      */
     private boolean getCoordenadas(){
         if (checkPermisionLocation()){
-            LocationManager locManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-            if (locManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
-                //TODO EXTRAER COORDENADAS
+            LocalizacionListener loc = new LocalizacionListener(getApplicationContext());
+            if (loc.getIsGPSTrackingEnabled()){
+                this.latitud = loc.getLatitude();
+                this.longitud = loc.getLongitude();
                 return true;
             }else {
                 this.mostrarSnackbar("Es necesario activar el GPS para poder registrarse");
@@ -183,7 +183,8 @@ public class RegistroActivity extends AppCompatActivity implements View.OnClickL
                 this.txieFecha.getText().toString(),
                 this.txilCorreo.getEditText().getText().toString(),
                 this.txilTlf.getEditText().getText().toString(),
-                this.txilComentarios.getEditText().getText().toString());
+                this.txilComentarios.getEditText().getText().toString(),
+                this.longitud, this.latitud);
 
         Response.Listener<String> respuesta = new Response.Listener<String>() {
             @Override

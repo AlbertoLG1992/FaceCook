@@ -51,6 +51,8 @@ public class ControlUsuariosRequest extends StringRequest {
         this.parametros.put("correo", usuario.getCorreoElectronico());
         this.parametros.put("tlf", usuario.getTlf());
         this.parametros.put("comentarios", usuario.getComentarios());
+        this.parametros.put("latitud", String.valueOf(usuario.getLatitud()));
+        this.parametros.put("longitud", String.valueOf(usuario.getLongitud()));
     }
 
     @Override
