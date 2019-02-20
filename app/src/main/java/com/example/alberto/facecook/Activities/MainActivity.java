@@ -1,8 +1,10 @@
 package com.example.alberto.facecook.Activities;
 
+import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
 import android.support.design.widget.Snackbar;
@@ -47,6 +49,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         this.iniciarElementos();
         this.esconderStaturBar();
+        this.pedirPermisosLocation();
     }
 
     /**
@@ -240,6 +243,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 (View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
             getWindow().setStatusBarColor(Color.TRANSPARENT);
+        }
+    }
+
+    /**
+     * Método para pedir los permisos de localización, de esta forma no molestará al usuario
+     * al entrar en con su cuenta y podrá enviar sus coordenadas desde el principio
+     */
+    private void pedirPermisosLocation(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            //PERMISOS DE LOCALIZACIÓN
+            if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 100);
+                Log.i("checkPermisionLocation", "Se han pedido los permisos de localización");
+            }else{
+                Log.i("checkPermisionLocation", "Permisos de localización cargados " +
+                        "correctamente");
+            }
         }
     }
 }

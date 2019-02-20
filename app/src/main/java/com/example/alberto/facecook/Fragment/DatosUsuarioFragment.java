@@ -1,11 +1,8 @@
 package com.example.alberto.facecook.Fragment;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
-import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +13,6 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
-import com.example.alberto.facecook.BaseDeDatos.BDExterna.ControlUsuariosRequest;
 import com.example.alberto.facecook.BaseDeDatos.BDExterna.ExtraerUsuariosRequest;
 import com.example.alberto.facecook.Dialog.LoginProgressDialog;
 import com.example.alberto.facecook.R;
@@ -119,8 +115,8 @@ public class DatosUsuarioFragment extends Fragment {
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Snackbar.make(getActivity().getCurrentFocus(),
-                        "Algo raro ha pasado con el servidor", Snackbar.LENGTH_LONG).show();
+                Toast.makeText(getContext(), "Algo raro ha pasado con el servidor",
+                        Toast.LENGTH_LONG).show();
                 progress.parar();
             }
         };

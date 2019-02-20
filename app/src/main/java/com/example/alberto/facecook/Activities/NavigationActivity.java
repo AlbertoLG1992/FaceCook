@@ -1,8 +1,11 @@
 package com.example.alberto.facecook.Activities;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.FragmentTransaction;
@@ -10,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,6 +25,7 @@ import com.example.alberto.facecook.Dialog.CategoriasPlatosDialog;
 import com.example.alberto.facecook.Fragment.CocinerosFragment;
 import com.example.alberto.facecook.Fragment.DatosUsuarioFragment;
 import com.example.alberto.facecook.Fragment.RecetasFragment;
+import com.example.alberto.facecook.Localizacion.LocalizacionListener;
 import com.example.alberto.facecook.R;
 
 public class NavigationActivity extends AppCompatActivity
@@ -46,6 +51,7 @@ public class NavigationActivity extends AppCompatActivity
     /* Variables */
     private Menu menuDeItems;
     private String nombreUsuarioActivo;
+    private LocalizacionListener localizacionListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -289,7 +295,36 @@ public class NavigationActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * Inicializa el LocalizationListener y lo fuerza a enviar las coordenadas al servidor
+     */
     private void enviarCoordenadasServidor(){
-        //TODO ENVIAR COORDENADAS AL SERVIDOR
+        if (checkPermisionLocation()) {
+            localizacionListener = new LocalizacionListener(getApplicationContext(), nombreUsuarioActivo);
+            if (localizacionListener.getIsGPSTrackingEnabled()) {
+                localizacionListener.actualizarCoordServidor();
+            }
+        }
+    }
+
+    /**
+     * Valida los permisos para acceder a la localización
+     *
+     * @return :True si los permisos estan cargados, en caso negativo los pide
+     */
+    private boolean checkPermisionLocation(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 100);
+                Log.i("checkPermisionLocation", "Se han pedido los permisos de localización");
+                return false;
+            }else{
+                Log.i("checkPermisionLocation", "Permisos de localización cargados " +
+                        "correctamente");
+                return true;
+            }
+        }
+        return true;
     }
 }

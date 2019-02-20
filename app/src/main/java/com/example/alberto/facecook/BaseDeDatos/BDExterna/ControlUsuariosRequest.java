@@ -55,6 +55,25 @@ public class ControlUsuariosRequest extends StringRequest {
         this.parametros.put("longitud", String.valueOf(usuario.getLongitud()));
     }
 
+    /**
+     * Constructor para actualizar las coordenadas
+     *
+     * @param user :String
+     * @param latitud :String
+     * @param longitud :String
+     * @param listener :Response.Listener<String>
+     * @param listenerError  :Response.ErrorListener
+     */
+    public ControlUsuariosRequest(String user ,double latitud, double longitud,
+                                  Response.Listener<String> listener,
+                                  Response.ErrorListener listenerError){
+        super(Method.POST, URL, listener, listenerError);
+        this.parametros = new HashMap<>();
+        this.parametros.put("user", user);
+        this.parametros.put("latitud", String.valueOf(latitud));
+        this.parametros.put("longitud", String.valueOf(longitud));
+    }
+
     @Override
     protected Map<String, String> getParams(){
         return parametros;

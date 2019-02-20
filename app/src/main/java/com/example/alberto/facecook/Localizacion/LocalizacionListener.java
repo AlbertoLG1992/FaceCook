@@ -17,6 +17,15 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.Volley;
+import com.example.alberto.facecook.BaseDeDatos.BDExterna.ControlUsuariosRequest;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class LocalizacionListener extends Service implements LocationListener {
 
     /* Atributos */
@@ -37,6 +46,8 @@ public class LocalizacionListener extends Service implements LocationListener {
     protected LocationManager locationManager;
     // Store LocationManager.GPS_PROVIDER or LocationManager.NETWORK_PROVIDER information
     private String provider_info;
+    //Nombre de usuario para actualizar la base de datos
+    private String nombreUsuario;
 
     /**
      * Constructor de clase
@@ -45,6 +56,13 @@ public class LocalizacionListener extends Service implements LocationListener {
      */
     public LocalizacionListener(Context context) {
         this.mContext = context;
+        this.nombreUsuario = "";
+        getLocation();
+    }
+
+    public LocalizacionListener(Context context, String nombreUsuario) {
+        this.mContext = context;
+        this.nombreUsuario = nombreUsuario;
         getLocation();
     }
 
@@ -142,6 +160,35 @@ public class LocalizacionListener extends Service implements LocationListener {
     public boolean getIsGPSTrackingEnabled() {
 
         return this.isGPSTrackingEnabled;
+    }
+
+    /**
+     * Actualiza las coordenadas en el servidor
+     */
+    public void actualizarCoordServidor(){
+        Response.Listener<String> listener = new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                JSONObject jsonRespuesta = null;
+                try {
+                    jsonRespuesta = new JSONObject(response);
+                    String mensaje = jsonRespuesta.getString("mensaje");
+                    Log.e(TAG, mensaje);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        Response.ErrorListener errorListener = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e(TAG, "Error al conectar al servidor");
+            }
+        };
+        ControlUsuariosRequest request = new ControlUsuariosRequest(this.nombreUsuario, getLatitude(),
+                getLongitude(), listener, errorListener);
+        RequestQueue cola = Volley.newRequestQueue(this.mContext);
+        cola.add(request);
     }
 
     /**
@@ -250,6 +297,12 @@ public class LocalizacionListener extends Service implements LocationListener {
 
     @Override
     public void onLocationChanged(Location location) {
+        /* Comprobando que el nombre de usuario no esté vacio es de la forma
+         * en que se sabe si se ha usado con el constructor para la creación
+         * de usuario o el constructor para actualizar las coordenadas*/
+        if (!this.nombreUsuario.isEmpty()){
+            this.actualizarCoordServidor();
+        }
     }
 
     @Override
