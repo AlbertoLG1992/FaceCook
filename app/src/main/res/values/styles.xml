@@ -17,4 +17,10 @@
         <item name="android:textColorHint">@color/colorWhite</item>
     </style>
 
+    <style name="AppTheme.NavigationView" parent="AppTheme">
+        <item name="android:textColorSecondary">@color/colorSecundaryText</item>
+        <item name="android:colorBackground">@color/colorPrimary</item>
+        <item name="colorPrimary">@color/colorWhite</item>
+    </style>
+
 </resources>
