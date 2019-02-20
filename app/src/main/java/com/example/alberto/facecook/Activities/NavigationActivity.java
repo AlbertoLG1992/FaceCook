@@ -1,5 +1,6 @@
 package com.example.alberto.facecook.Activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
@@ -11,6 +12,8 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import com.example.alberto.facecook.Adaptadores.AdapterRecetas;
 import com.example.alberto.facecook.Clases.Plato;
@@ -41,7 +44,6 @@ public class NavigationActivity extends AppCompatActivity
     private final int REQUEST_RECETA_NUEVA = 1;
 
     /* Variables */
-    private boolean searchViewCerrado = false;
     private Menu menuDeItems;
     private String nombreUsuarioActivo;
 
@@ -111,28 +113,29 @@ public class NavigationActivity extends AppCompatActivity
 
             @Override
             public boolean onQueryTextChange(String s) {
-                /* La variable searchViewCerrado existe porque al cerrar el searchView
-                 * vuelve a ejecutar este método, por lo que para evitar que al volverse
-                 * a ejecutar vuelva a filtrar sin valores y borre el filtrado */
-                if (!searchViewCerrado){
-                    recetasFragment.cargarAdaptador("Nombre",s);
-                }else{
-                    /* Este else es para que una vez se haya pulsado a intro y se cierre el
-                     * searchView se pueda acceder otra vez que se pulse */
-                    searchViewCerrado = false;
-                }
+                recetasFragment.cargarAdaptador("Nombre",s);
                 return true;
             }
 
             @Override
             public boolean onQueryTextSubmit(String query) {
-                searchViewCerrado = true;
                 recetasFragment.cargarAdaptador("Nombre",query);
-                searchView.onActionViewCollapsed();
+                closeKeyboard();
                 return true;
             }
         });
         return true;
+    }
+
+    /**
+     * Método para ocultar el teclado
+     */
+    private void closeKeyboard(){
+        View view = this.getCurrentFocus();
+        if (view != null){
+            InputMethodManager inp = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            inp.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 
     /**
