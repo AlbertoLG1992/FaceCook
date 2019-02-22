@@ -14,7 +14,24 @@ public class Usuario {
                     tlf,
                     comentarios;
     private double longitud, latitud;
+    private String urlFoto;
+    private String fechaAlta;
 
+    /**
+     * Constructor con foto de usuario
+     *
+     * @param fotoUsuario :FotoUsuario
+     * @param nick :String
+     * @param pass :String
+     * @param nombre :String
+     * @param apellidos :String
+     * @param fechaNacimiento :String
+     * @param correoElectronico :String
+     * @param tlf :String
+     * @param comentarios :String
+     * @param longitud :double
+     * @param latitud :double
+     */
     public Usuario(FotoUsuario fotoUsuario, String nick, String pass, String nombre, String apellidos,
                    String fechaNacimiento, String correoElectronico, String tlf, String comentarios,
                    double longitud, double latitud) {
@@ -29,6 +46,53 @@ public class Usuario {
         this.comentarios = comentarios;
         this.longitud = longitud;
         this.latitud = latitud;
+    }
+
+    /**
+     * Constructor con urlFoto
+     *
+     * @param urlFoto :String
+     * @param nick :String
+     * @param nombre :String
+     * @param apellidos :String
+     * @param fechaNacimiento :String
+     * @param correoElectronico :String
+     * @param tlf :String
+     * @param comentarios :String
+     * @param longitud :double
+     * @param latitud :double
+     */
+    public Usuario(String urlFoto, String nick, String nombre, String apellidos,
+                   String fechaNacimiento, String correoElectronico, String tlf,
+                   String fechaAlta ,String comentarios,
+                   double longitud, double latitud) {
+        this.urlFoto = urlFoto;
+        this.nick = nick;
+        this.nombre = nombre;
+        this.apellidos = apellidos;
+        this.fechaNacimiento = fechaNacimiento;
+        this.correoElectronico = correoElectronico;
+        this.tlf = tlf;
+        this.fechaAlta = fechaAlta;
+        this.comentarios = comentarios;
+        this.longitud = longitud;
+        this.latitud = latitud;
+    }
+
+    public String getFechaAlta() {
+        return fechaAlta;
+    }
+
+    public void setFechaAlta(String fechaAlta) {
+        this.fechaAlta = fechaAlta;
+    }
+
+    public String getUrlFoto() {
+        return urlFoto;
+    }
+
+    public void setUrlFoto(String urlFoto) {
+        this.urlFoto = urlFoto;
     }
 
     public FotoUsuario getFotoUsuario() {
