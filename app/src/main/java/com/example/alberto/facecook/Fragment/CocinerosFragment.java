@@ -1,5 +1,6 @@
 package com.example.alberto.facecook.Fragment;
 
+import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -8,12 +9,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
+import com.example.alberto.facecook.Adaptadores.AdapterInfoMarker;
 import com.example.alberto.facecook.BaseDeDatos.BDExterna.ExtraerUsuariosRequest;
 import com.example.alberto.facecook.Clases.Usuario;
 import com.example.alberto.facecook.Dialog.LoginProgressDialog;
@@ -24,23 +27,26 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.zip.Inflater;
 
-public class CocinerosFragment extends Fragment implements OnMapReadyCallback {
+public class CocinerosFragment extends Fragment implements OnMapReadyCallback,
+        GoogleMap.OnMarkerClickListener, GoogleMap.OnMapClickListener{
 
     /* Atributos */
     private GoogleMap mMap; //Mapa
     private LoginProgressDialog progress; //DialogProgress
     private ArrayList<Usuario> arrayListUsuarios; //ArrayList de usuarios
     private Context context; //Contexto de la actividad
+    private LayoutInflater inflater;
 
-    private OnFragmentInteractionListener mListener; 
+    private OnFragmentInteractionListener mListener;
 
     /**
      * Constructor de clase
@@ -57,6 +63,8 @@ public class CocinerosFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        this.inflater = inflater;
+
         View view = inflater.inflate(R.layout.fragment_cocineros, container, false);
 
         /* Carga el fragment del mapa */
@@ -94,10 +102,15 @@ public class CocinerosFragment extends Fragment implements OnMapReadyCallback {
         /* Se iguala el mapa con el que trabajaremos
          * al que nos da el fragment al cargarlo */
         this.mMap = googleMap;
+        this.mMap.setOnMarkerClickListener(this);
+        this.mMap.setOnMapClickListener(this);
 
         /* Se cargan los datos en el mapa y se coloca la cámara en la posición inicial */
         cargarDatosMapa();
         colocarCamaraInicial();
+
+        /* Se carga el adaptador en el que se visualizarán los Marker */
+        this.mMap.setInfoWindowAdapter(new AdapterInfoMarker(inflater, context, arrayListUsuarios));
     }
 
     /**
@@ -191,6 +204,23 @@ public class CocinerosFragment extends Fragment implements OnMapReadyCallback {
      */
     private void colocarCamaraInicial(){
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(40.436770, -3.707009), 6));
+    }
+
+    /**
+     * Al hacer un click en un Marker
+     */
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        Toast.makeText(this.context, marker.getTitle(), Toast.LENGTH_LONG).show();
+        return false;
+    }
+
+    /**
+     * Al hacer un click en el mapa
+     */
+    @Override
+    public void onMapClick(LatLng latLng) {
+        Toast.makeText(this.context, latLng.toString(), Toast.LENGTH_LONG).show();
     }
 
     /**
