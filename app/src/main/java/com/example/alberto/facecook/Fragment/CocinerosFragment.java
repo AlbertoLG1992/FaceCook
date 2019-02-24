@@ -110,7 +110,7 @@ public class CocinerosFragment extends Fragment implements OnMapReadyCallback,
         colocarCamaraInicial();
 
         /* Se carga el adaptador en el que se visualizarán los Marker */
-        this.mMap.setInfoWindowAdapter(new AdapterInfoMarker(inflater, context, arrayListUsuarios));
+        this.mMap.setInfoWindowAdapter(new AdapterInfoMarker(inflater, arrayListUsuarios));
     }
 
     /**

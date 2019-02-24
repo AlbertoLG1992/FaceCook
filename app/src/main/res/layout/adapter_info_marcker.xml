@@ -32,7 +32,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:padding="10dp">
 
                 <TextView
                     android:id="@+id/txvNick"
@@ -40,6 +41,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="Nick"
+                    android:textColor="@color/colorPrimary"
                     android:textSize="24sp" />
 
                 <TextView
@@ -48,14 +50,15 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="Nombre y Apellidos"
-                    android:textSize="20sp" />
+                    android:textSize="18sp" />
 
                 <TextView
                     android:id="@+id/txvComentarios"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="Comentarios" />
+                    android:text="Comentarios"
+                    android:textStyle="italic" />
             </LinearLayout>
 
         </LinearLayout>
