@@ -17,6 +17,20 @@
         android:id="@+id/itemCancelarVerUsuario"
         android:icon="@drawable/ic_cancel_black_24dp"
         android:title="Cancelar ver usuario"
+        android:visible="false"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/itemBuscarUsuarios"
+        android:icon="@drawable/ic_search_black_24dp"
+        android:title="Buscar Usuarios"
+        android:visible="false"
+        app:actionViewClass="android.support.v7.widget.SearchView"
+        app:showAsAction="always|collapseActionView" />
+    <item
+        android:id="@+id/itemLocalizarme"
+        android:icon="@drawable/ic_my_location_black_24dp"
+        android:title="Localizarme"
+        android:visible="false"
         app:showAsAction="always" />
 
 </menu>

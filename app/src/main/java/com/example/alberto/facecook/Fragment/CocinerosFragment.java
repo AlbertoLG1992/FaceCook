@@ -213,10 +213,10 @@ public class CocinerosFragment extends Fragment implements OnMapReadyCallback,
      */
     public void moverCamaraMarker(String user){
         for (int i = 0; i < arrayListUsuarios.size(); i++){
-            if (arrayListUsuarios.get(i).getNick().equals(user)){
+            if (arrayListUsuarios.get(i).getNick().toLowerCase().equals(user.toLowerCase())){
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
                         new LatLng(arrayListUsuarios.get(i).getLatitud(),
-                                    arrayListUsuarios.get(i).getLongitud()), 6));
+                                    arrayListUsuarios.get(i).getLongitud()), 10));
             }
         }
     }

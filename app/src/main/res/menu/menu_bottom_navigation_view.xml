@@ -9,7 +9,7 @@
         app:showAsAction="always" />
     <item
         android:id="@+id/itemVerCocineros"
-        android:icon="@drawable/ic_my_location_black_24dp"
+        android:icon="@drawable/ic_location_on_black_24dp"
         android:title="Ver Cocineros"
         app:showAsAction="always" />
     <item

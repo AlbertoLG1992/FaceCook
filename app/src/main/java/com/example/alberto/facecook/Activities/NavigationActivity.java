@@ -1,6 +1,7 @@
 package com.example.alberto.facecook.Activities;
 
 import android.Manifest;
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -18,6 +19,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import com.example.alberto.facecook.Adaptadores.AdapterRecetas;
@@ -131,6 +133,24 @@ public class NavigationActivity extends AppCompatActivity
                 return true;
             }
         });
+
+        /* Listenner de Search View para buscar usuarios */
+        MenuItem buscarUsuariosItem = menu.findItem(R.id.itemBuscarUsuarios);
+        final SearchView searchViewUsuarios = (SearchView) buscarUsuariosItem.getActionView();
+        searchViewUsuarios.setQueryHint("Buscar usuarios...");
+        searchViewUsuarios.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                cocinerosFragment.moverCamaraMarker(s);
+                closeKeyboard();
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                return false;
+            }
+        });
         return true;
     }
 
@@ -161,6 +181,10 @@ public class NavigationActivity extends AppCompatActivity
             }
             case R.id.itemCancelarVerUsuario:{
                 this.bottomNavigationView.setSelectedItemId(R.id.itemVerCocineros);
+                break;
+            }
+            case R.id.itemLocalizarme:{
+                this.cocinerosFragment.moverCamaraMarker(this.nombreUsuarioActivo);
                 break;
             }
         }
@@ -201,6 +225,8 @@ public class NavigationActivity extends AppCompatActivity
         MenuItem searchViewItemRecetas = menuDeItems.findItem(R.id.itemBuscar);
         MenuItem menuItemFiltrarRecetas = menuDeItems.findItem(R.id.itemFiltrarCategorias);
         MenuItem menuItemCancelarVerUsuario = menuDeItems.findItem(R.id.itemCancelarVerUsuario);
+        MenuItem menuItemLocalizarme = menuDeItems.findItem(R.id.itemLocalizarme);
+        MenuItem menuItemBuscarUsuarios = menuDeItems.findItem(R.id.itemBuscarUsuarios);
 
         /* Fragment de recetas */
         if (ver.equals("recetas")){
@@ -216,6 +242,15 @@ public class NavigationActivity extends AppCompatActivity
             menuItemCancelarVerUsuario.setVisible(true);
         }else {
             menuItemCancelarVerUsuario.setVisible(false);
+        }
+
+        /* Fragment viendo los cocineros */
+        if (ver.equals("cocineros")){
+            menuItemLocalizarme.setVisible(true);
+            menuItemBuscarUsuarios.setVisible(true);
+        }else {
+            menuItemLocalizarme.setVisible(false);
+            menuItemBuscarUsuarios.setVisible(false);
         }
     }
 
