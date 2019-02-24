@@ -25,6 +25,7 @@ public class AdapterInfoMarker implements GoogleMap.InfoWindowAdapter {
 
     private LayoutInflater inflater;
     private ArrayList<Usuario> arrayListUsuarios;
+    private Usuario usuarioEscogido;
 
     public AdapterInfoMarker(LayoutInflater inflater, ArrayList<Usuario> arrayListUsuarios){
         this.inflater = inflater;
@@ -41,7 +42,7 @@ public class AdapterInfoMarker implements GoogleMap.InfoWindowAdapter {
         View view = inflater.inflate(R.layout.adapter_info_marcker, null);
 
         /* Se busca en el arrayList el usuario que se ha pulsado */
-        Usuario usuarioEscogido = null;
+        usuarioEscogido = null;
         for (int i = 0; i < arrayListUsuarios.size(); i++){
             if (arrayListUsuarios.get(i).getNick().equals(marker.getTitle())){
                 usuarioEscogido = arrayListUsuarios.get(i);
@@ -80,5 +81,9 @@ public class AdapterInfoMarker implements GoogleMap.InfoWindowAdapter {
         txvComentarios.setText(usuarioEscogido.getComentarios());
 
         return view;
+    }
+
+    public Usuario getUsuarioEscogido(){
+        return this.usuarioEscogido;
     }
 }

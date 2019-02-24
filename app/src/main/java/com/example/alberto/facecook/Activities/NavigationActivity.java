@@ -18,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Toast;
 
 import com.example.alberto.facecook.Adaptadores.AdapterRecetas;
 import com.example.alberto.facecook.Clases.Plato;
@@ -244,8 +245,25 @@ public class NavigationActivity extends AppCompatActivity
      * Método que es ejecutado desde CocinerosFragment
      */
     @Override
-    public void onFragmentInteractionCocineros(Uri uri) {
-
+    public void onFragmentInteractionCocineros(String modo, String info) {
+        switch (modo){
+            case "Ficha":{
+                //TODO ABRIR DETALLES DE USUARIO
+                break;
+            }
+            case "Sms":{
+                //TODO MANDAR SMS
+                break;
+            }
+            case "Email":{
+                //TODO MANDAR EMAIL
+                break;
+            }
+            case "Llamar":{
+                //TODO LLAMAR POR TLF
+                break;
+            }
+        }
     }
 
     /**

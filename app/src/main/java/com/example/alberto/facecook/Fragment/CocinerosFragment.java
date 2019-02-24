@@ -9,6 +9,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,14 +39,17 @@ import java.util.ArrayList;
 import java.util.zip.Inflater;
 
 public class CocinerosFragment extends Fragment implements OnMapReadyCallback,
-        GoogleMap.OnMarkerClickListener, GoogleMap.OnMapClickListener{
+        GoogleMap.OnMarkerClickListener, GoogleMap.OnMapClickListener, View.OnClickListener {
 
     /* Atributos */
     private GoogleMap mMap; //Mapa
+    private LinearLayout layoutImagenes;
+
     private LoginProgressDialog progress; //DialogProgress
     private ArrayList<Usuario> arrayListUsuarios; //ArrayList de usuarios
     private Context context; //Contexto de la actividad
     private LayoutInflater inflater;
+    private AdapterInfoMarker adapterInfoMarker; //Adaptador de los Marker
 
     private OnFragmentInteractionListener mListener;
 
@@ -66,6 +71,22 @@ public class CocinerosFragment extends Fragment implements OnMapReadyCallback,
         this.inflater = inflater;
 
         View view = inflater.inflate(R.layout.fragment_cocineros, container, false);
+
+        /* Cargar elementos XML */
+        this.layoutImagenes = (LinearLayout)view.findViewById(R.id.layoutImagenes);
+        ImageView imgFicha = (ImageView)view.findViewById(R.id.imgFicha);
+        ImageView imgSms = (ImageView)view.findViewById(R.id.imgSms);
+        ImageView imgEmail = (ImageView)view.findViewById(R.id.imgEmail);
+        ImageView imgLlamar = (ImageView)view.findViewById(R.id.imgLlamar);
+
+        /* Hacer los elementos Clickables */
+        imgFicha.setOnClickListener(this);
+        imgSms.setOnClickListener(this);
+        imgEmail.setOnClickListener(this);
+        imgLlamar.setOnClickListener(this);
+
+        /* Se inicia la actividad con el layout de las imagenes en invisible */
+        layoutImagenes.setVisibility(View.INVISIBLE);
 
         /* Carga el fragment del mapa */
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
@@ -109,8 +130,9 @@ public class CocinerosFragment extends Fragment implements OnMapReadyCallback,
         cargarDatosMapa();
         colocarCamaraInicial();
 
-        /* Se carga el adaptador en el que se visualizarán los Marker */
-        this.mMap.setInfoWindowAdapter(new AdapterInfoMarker(inflater, arrayListUsuarios));
+        /* Se crea y carga el adaptador en el que se visualizarán los Marker */
+        this.adapterInfoMarker = new AdapterInfoMarker(inflater, arrayListUsuarios);
+        this.mMap.setInfoWindowAdapter(this.adapterInfoMarker);
     }
 
     /**
@@ -211,7 +233,7 @@ public class CocinerosFragment extends Fragment implements OnMapReadyCallback,
      */
     @Override
     public boolean onMarkerClick(Marker marker) {
-        Toast.makeText(this.context, marker.getTitle(), Toast.LENGTH_LONG).show();
+        this.layoutImagenes.setVisibility(View.VISIBLE);
         return false;
     }
 
@@ -220,21 +242,39 @@ public class CocinerosFragment extends Fragment implements OnMapReadyCallback,
      */
     @Override
     public void onMapClick(LatLng latLng) {
-        Toast.makeText(this.context, latLng.toString(), Toast.LENGTH_LONG).show();
+        this.layoutImagenes.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.imgFicha:{
+                this.mListener.onFragmentInteractionCocineros("Ficha",
+                        this.adapterInfoMarker.getUsuarioEscogido().getNombre());
+                break;
+            }
+            case R.id.imgSms:{
+                this.mListener.onFragmentInteractionCocineros("Sms",
+                        this.adapterInfoMarker.getUsuarioEscogido().getTlf());
+                break;
+            }
+            case R.id.imgEmail:{
+                this.mListener.onFragmentInteractionCocineros("Email",
+                        this.adapterInfoMarker.getUsuarioEscogido().getCorreoElectronico());
+                break;
+            }
+            case R.id.imgLlamar:{
+                this.mListener.onFragmentInteractionCocineros("Llamar",
+                        this.adapterInfoMarker.getUsuarioEscogido().getTlf());
+                break;
+            }
+        }
     }
 
     /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
+     * Interfaz para enviar datos a NavigationActivity
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteractionCocineros(Uri uri);
+        void onFragmentInteractionCocineros(String modo, String info);
     }
 }
