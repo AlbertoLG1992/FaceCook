@@ -13,5 +13,10 @@
         android:icon="@drawable/ic_tune_white"
         android:title="FiltrarCategorias"
         app:showAsAction="always" />
+    <item
+        android:id="@+id/itemCancelarVerUsuario"
+        android:icon="@drawable/ic_cancel_black_24dp"
+        android:title="Cancelar ver usuario"
+        app:showAsAction="always" />
 
 </menu>

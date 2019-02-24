@@ -250,7 +250,7 @@ public class CocinerosFragment extends Fragment implements OnMapReadyCallback,
         switch (v.getId()){
             case R.id.imgFicha:{
                 this.mListener.onFragmentInteractionCocineros("Ficha",
-                        this.adapterInfoMarker.getUsuarioEscogido().getNombre());
+                        this.adapterInfoMarker.getUsuarioEscogido().getNick());
                 break;
             }
             case R.id.imgSms:{

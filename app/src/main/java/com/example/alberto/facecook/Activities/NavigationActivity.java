@@ -159,6 +159,10 @@ public class NavigationActivity extends AppCompatActivity
                 dialog.show(getSupportFragmentManager(), "DialogoCategoriasPlatos");
                 break;
             }
+            case R.id.itemCancelarVerUsuario:{
+                this.bottomNavigationView.setSelectedItemId(R.id.itemVerCocineros);
+                break;
+            }
         }
         return super.onOptionsItemSelected(item);
     }
@@ -181,7 +185,7 @@ public class NavigationActivity extends AppCompatActivity
             case R.id.itemDatosUsuario:{
                 getSupportActionBar().setTitle("Mis Datos");
                 this.mostrarItemsMenu("usuario");
-                this.cargarFragmentDatosUsuario();
+                this.cargarFragmentDatosUsuario(this.nombreUsuarioActivo);
                 return true;
             }
         }
@@ -196,13 +200,22 @@ public class NavigationActivity extends AppCompatActivity
     private void mostrarItemsMenu(String ver){
         MenuItem searchViewItemRecetas = menuDeItems.findItem(R.id.itemBuscar);
         MenuItem menuItemFiltrarRecetas = menuDeItems.findItem(R.id.itemFiltrarCategorias);
+        MenuItem menuItemCancelarVerUsuario = menuDeItems.findItem(R.id.itemCancelarVerUsuario);
 
+        /* Fragment de recetas */
         if (ver.equals("recetas")){
             searchViewItemRecetas.setVisible(true);
             menuItemFiltrarRecetas.setVisible(true);
         }else {
             searchViewItemRecetas.setVisible(false);
             menuItemFiltrarRecetas.setVisible(false);
+        }
+
+        /* Fragment viendo datos del perfil de usuarios */
+        if (ver.equals("Usuario")){
+            menuItemCancelarVerUsuario.setVisible(true);
+        }else {
+            menuItemCancelarVerUsuario.setVisible(false);
         }
     }
 
@@ -225,10 +238,10 @@ public class NavigationActivity extends AppCompatActivity
     /**
      * Carga el fragment DatosUsuario
      */
-    private void cargarFragmentDatosUsuario(){
+    private void cargarFragmentDatosUsuario(String user){
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.contenedorFragment, this.datosUsuarioFragment).commit();
-        this.datosUsuarioFragment.cargarUsuario(this, this.nombreUsuarioActivo);
+        this.datosUsuarioFragment.cargarUsuario(this, user);
     }
 
     /**
@@ -248,7 +261,9 @@ public class NavigationActivity extends AppCompatActivity
     public void onFragmentInteractionCocineros(String modo, String info) {
         switch (modo){
             case "Ficha":{
-                //TODO ABRIR DETALLES DE USUARIO
+                getSupportActionBar().setTitle("Ficha de usuario");
+                this.mostrarItemsMenu("Usuario");
+                this.cargarFragmentDatosUsuario(info);
                 break;
             }
             case "Sms":{
