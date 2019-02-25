@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -302,15 +303,29 @@ public class NavigationActivity extends AppCompatActivity
                 break;
             }
             case "Sms":{
-                //TODO MANDAR SMS
+                if (checkPermisionSendSMS()){
+                    Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse("smsto:" + info));
+                    intent.putExtra("sms_body", "Saludos!, \nSoy " + nombreUsuarioActivo +
+                            " y me gustaria contactar contigo. \nᕙ(⇀‸↼‶)ᕗ");
+                    startActivity(intent);
+                }
                 break;
             }
             case "Email":{
-                //TODO MANDAR EMAIL
+                Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
+                        "mailto", info, null));
+                intent.putExtra(Intent.EXTRA_SUBJECT, "Holi");
+                intent.putExtra(Intent.EXTRA_TEXT, "Saludos!, \nSoy " + nombreUsuarioActivo +
+                        " y me gustaria contactar contigo. \nᕙ(⇀‸↼‶)ᕗ");
+                startActivity(intent);
                 break;
             }
             case "Llamar":{
-                //TODO LLAMAR POR TLF
+                if (checkPermisionCallPhone()){
+                    Intent intent = new Intent(Intent.ACTION_DIAL);
+                    intent.setData(Uri.parse("tel:" + info));
+                    startActivity(intent);
+                }
                 break;
             }
         }
@@ -389,6 +404,48 @@ public class NavigationActivity extends AppCompatActivity
                 return false;
             }else{
                 Log.i("checkPermisionLocation", "Permisos de localización cargados " +
+                        "correctamente");
+                return true;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Valida los permisos para enviar sms
+     *
+     * @return :True si los permisos estan cargados, en caso negativo los pide
+     */
+    private boolean checkPermisionSendSMS(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkSelfPermission(Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.SEND_SMS}, 100);
+                Log.i("checkPermisionLocation", "Se han pedido los permisos de localización");
+                Toast.makeText(this, "Inténtelo de nuevo", Toast.LENGTH_LONG).show();
+                return false;
+            }else{
+                Log.i("checkPermisionLocation", "Permisos de SMS cargados " +
+                        "correctamente");
+                return true;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Valida los permisos para llamar por tlf
+     *
+     * @return :True si los permisos estan cargados, en caso negativo los pide
+     */
+    private boolean checkPermisionCallPhone(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkSelfPermission(Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, 100);
+                Log.i("checkPermisionLocation", "Se han pedido los permisos de localización");
+                Toast.makeText(this, "Inténtelo de nuevo", Toast.LENGTH_LONG).show();
+                return false;
+            }else{
+                Log.i("checkPermisionLocation", "Permisos de CALL PHONE cargados " +
                         "correctamente");
                 return true;
             }
