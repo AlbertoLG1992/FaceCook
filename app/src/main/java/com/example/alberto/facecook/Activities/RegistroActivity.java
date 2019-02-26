@@ -481,7 +481,7 @@ public class RegistroActivity extends AppCompatActivity implements View.OnClickL
         this.txilTlf.getEditText().setText("");
         this.txilComentarios.getEditText().setText("");
 
-        this.imgUser.setImageResource(R.drawable.ic_person_black_24dp);
+        this.imgUser.setImageResource(R.drawable.profile);
         this.fotoUsuario.borrarFotoAnterior();
 
         this.txilNick.setErrorEnabled(false);
